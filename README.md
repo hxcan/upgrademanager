@@ -1,4 +1,4 @@
-VoiceUi: Voice UI for Android
+UpgradeManager: Check upgrade for Android application
 ===
 
-[![](https://jitpack.io/v/hxcan/voiceui.svg)](https://jitpack.io/#hxcan/voiceui)
+[![](https://jitpack.io/v/hxcan/upgrademanager.svg)](https://jitpack.io/#hxcan/upgrademanager)
