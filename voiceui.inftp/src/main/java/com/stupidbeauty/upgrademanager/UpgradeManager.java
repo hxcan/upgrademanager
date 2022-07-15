@@ -20,7 +20,7 @@ import java.util.HashMap;
 import android.content.Context;
 import com.stupidbeauty.victoriafresh.VFile;
 
-public class VoiceUi
+public class UpgradeManager
 {
   private VoicePackageUrlMapData voicePackageUrlMapData; //!<语音识别结果与软件包下载地址之间的映射。
   private int recognizeCounter=0; //!<识别计数器．
@@ -59,10 +59,6 @@ public class VoiceUi
     this.port=port;
   } //public void setPort(int port)
         
-  private VoiceUi() 
-  {
-  }
-  
   /**
   * 载入映射文件。
   */
@@ -146,12 +142,8 @@ public class VoiceUi
       
       MediaDataSource soundMediaSource=qrcHtmlFile.getMediaDataSource(); // 获取媒体数据源。
 
-//       mediaPlayer.setDataSource(file.getFileDescriptor(), soundStartOffset, soundLength); // 设置数据源。
       mediaPlayer.setDataSource(soundMediaSource); // 设置数据源。
-//       mediaPlayer.setDataSource(vfsDatafileDescriptor, soundStartOffset, soundLength); // 设置数据源。
       
-//       file.close();
-//       mediaPlayer.setVolume(BEEP_VOLUME, BEEP_VOLUME);
       mediaPlayer.prepare();
     }
     catch (IOException ioe) 
@@ -162,7 +154,7 @@ public class VoiceUi
     return mediaPlayer;
   }
 
-  public VoiceUi(Context context) 
+  public UpgradeManager(Context context) 
   {
     this.context = context;
   }
