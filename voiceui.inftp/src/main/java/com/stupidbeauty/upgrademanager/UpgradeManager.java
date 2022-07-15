@@ -1,4 +1,4 @@
-package com.stupidbeauty.voiceui;
+package com.stupidbeauty.upgrademanager;
 
 import android.util.Log;
 import android.media.MediaDataSource;

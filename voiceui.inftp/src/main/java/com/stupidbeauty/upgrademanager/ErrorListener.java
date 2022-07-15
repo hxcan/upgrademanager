@@ -1,4 +1,4 @@
-package com.stupidbeauty.voiceui;
+package com.stupidbeauty.upgrademanager;
 
 public interface ErrorListener
 {
