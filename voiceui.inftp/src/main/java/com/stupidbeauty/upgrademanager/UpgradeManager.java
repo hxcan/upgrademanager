@@ -42,7 +42,7 @@ import com.stupidbeauty.grebe.DownloadRequestor;
 import com.stupidbeauty.grebe.DownloadRequestorInterface;
 import com.stupidbeauty.hxlauncher.asynctask.LoadVoicePackageUrlMapTask;
 import com.stupidbeauty.hxlauncher.asynctask.LoadVoicePackageUrlMapInterface;
-import com.stupidbeauty.hxlauncher.bean.ApplicationNameInternationalizationData;
+// import com.stupidbeauty.hxlauncher.bean.ApplicationNameInternationalizationData;
 
 public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePackageUrlMapInterface
 {
