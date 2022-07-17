@@ -175,7 +175,7 @@ public class DownloadRequestor
     {
       try
       {
-        Uri downloadedApk = FileProvider.getUriForFile(baseApplication, "com.stupidbeauty.fileprovider", file);
+        Uri downloadedApk = FileProvider.getUriForFile(baseApplication, "com.stupidbeauty.upgrademanager.fileprovider", file);
 
         intent.setClipData(ClipData.newRawUri("", downloadedApk));
           
