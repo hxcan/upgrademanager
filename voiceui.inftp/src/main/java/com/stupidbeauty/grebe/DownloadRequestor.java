@@ -176,11 +176,13 @@ public class DownloadRequestor
       try
       {
         Uri downloadedApk = FileProvider.getUriForFile(baseApplication, "com.stupidbeauty.fileprovider", file);
-          
+
         intent.setClipData(ClipData.newRawUri("", downloadedApk));
           
         intent.setDataAndType(downloadedApk, type);
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        
+        Log.d(TAG, "requestInstall, intent: " + intent); // Debug.
       }
       catch(IllegalArgumentException e)
       {
@@ -189,11 +191,13 @@ public class DownloadRequestor
         e.printStackTrace();
         
         intent.setDataAndType(Uri.fromFile(file), type);
+        Log.d(TAG, "requestInstall, intent: " + intent); // Debug.
       } // catch(IllegalArgumentException e)
     }
     else 
     {
       intent.setDataAndType(Uri.fromFile(file), type);
+        Log.d(TAG, "requestInstall, intent: " + intent); // Debug.
     }
 
     Log.d(TAG, "requestInstall, starting activity to install apk"); // Debug.
@@ -301,7 +305,13 @@ public class DownloadRequestor
       {
         result=true; // It is apk file.
       } // if (packageName==null) // No package name provided
+      else if (packageName.equals(packageInfo.packageName)) // Package name euqals
+      {
+        result=true; // It is apk file.
+      } // else if (packageName.equals(packageInfo.packageName)) // Package name euqals
     }
+    
+    Log.d(TAG, "checkIsApkFile, result: "+ result); // Debug.
 
     return result;
   } // private boolean checkIsApkFile(String apkFilePath)
