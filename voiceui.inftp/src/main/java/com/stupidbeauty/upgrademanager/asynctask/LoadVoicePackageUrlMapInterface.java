@@ -1,4 +1,4 @@
-package com.stupidbeauty.hxlauncher.asynctask;
+package com.stupidbeauty.upgrademanager.asynctask;
 
 import android.content.Context;
 import android.content.Intent;

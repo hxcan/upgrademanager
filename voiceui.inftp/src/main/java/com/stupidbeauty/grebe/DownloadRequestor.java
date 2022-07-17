@@ -243,11 +243,11 @@ public class DownloadRequestor
     /**
     * Report download finished.
     */
-    private void notifyDownloadFinish() 
+    private void notifyDownloadFinish(String wholePath)
     {
       if (launcherActivity!=null)
       {
-        launcherActivity.reportDownloadFinished(packageName); // 报告，下载 finished.
+        launcherActivity.reportDownloadFinished(packageName, wholePath); // 报告，下载 finished.
       }
     } // private void notifyDownloadFinish()
     
@@ -331,7 +331,7 @@ public class DownloadRequestor
 //           Log.d(TAG, "downloadByIon, progress: " + downloaded + "/" + total + ", " + targetUrl); // 报告进度。
         }
       })
-      .setLogging(TAG, Log.DEBUG) .write(new File( wholePath))
+      .setLogging(TAG, Log.DEBUG).write(new File( wholePath))
       .setCallback(new FutureCallback<File>() 
       {
         @Override
@@ -367,7 +367,7 @@ public class DownloadRequestor
             }
             else // Not auto install
             {
-              notifyDownloadFinish(); // Report download finished.
+              notifyDownloadFinish(wholePath); // Report download finished.
             }
           } //else // 下载完毕
         }

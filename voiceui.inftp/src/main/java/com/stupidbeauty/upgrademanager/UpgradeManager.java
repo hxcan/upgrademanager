@@ -40,9 +40,8 @@ import android.content.Context;
 import com.stupidbeauty.victoriafresh.VFile;
 import com.stupidbeauty.grebe.DownloadRequestor;
 import com.stupidbeauty.grebe.DownloadRequestorInterface;
-import com.stupidbeauty.hxlauncher.asynctask.LoadVoicePackageUrlMapTask;
-import com.stupidbeauty.hxlauncher.asynctask.LoadVoicePackageUrlMapInterface;
-// import com.stupidbeauty.hxlauncher.bean.ApplicationNameInternationalizationData;
+import com.stupidbeauty.upgrademanager.asynctask.LoadVoicePackageUrlMapTask;
+import com.stupidbeauty.upgrademanager.asynctask.LoadVoicePackageUrlMapInterface;
 
 public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePackageUrlMapInterface
 {
@@ -135,7 +134,6 @@ public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePack
       } //if (availableVersonName > currentVersionName) // 有新版本
       else // 无新版本
       {
-//         hideUpgradeIcon(); // 隐藏升级按钮。
       } //else // 无新版本
   } // private void compareVersionName()
   
@@ -143,20 +141,20 @@ public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePack
   * 报告，下载 finished.
   */
   @Override
-  public void reportDownloadFinished(String packageName) 
+  public void reportDownloadFinished(String packageName, String filePath)
   {
-    loadVoicePackageUrlMap(); // Load the voice package url map.
+    loadVoicePackageUrlMap(filePath); // Load the voice package url map.
   } // public void reportDownloadFinished(String packageName)
   
-	/**
-	 * 载入语音识别结果与包下载地址之间的映射。
-	 */
-	private void loadVoicePackageUrlMap()
-	{
-      LoadVoicePackageUrlMapTask translateRequestSendTask =new LoadVoicePackageUrlMapTask(); //创建异步任务。
+  /**
+  * 载入语音识别结果与包下载地址之间的映射。
+  */
+  private void loadVoicePackageUrlMap(String filePath)
+  {
+    LoadVoicePackageUrlMapTask translateRequestSendTask =new LoadVoicePackageUrlMapTask(); //创建异步任务。
 
-      translateRequestSendTask.execute(this); //执行任务。
-	} //private void loadVoicePackageUrlMap()
+    translateRequestSendTask.execute(this, filePath); //执行任务。
+  } //private void loadVoicePackageUrlMap()
 
   /**
   * 报告，下载失败。
