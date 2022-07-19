@@ -194,7 +194,7 @@ public class DownloadRequestor
     else 
     {
       intent.setDataAndType(Uri.fromFile(file), type);
-        Log.d(TAG, "requestInstall, intent: " + intent); // Debug.
+      Log.d(TAG, "requestInstall, intent: " + intent); // Debug.
     }
 
     Log.d(TAG, "requestInstall, starting activity to install apk"); // Debug.
@@ -206,10 +206,10 @@ public class DownloadRequestor
   {
     baseApplication = context; //获取应用程序对象。
     
+    actionName="com.stupidbeauty.upgrademanager."+ baseApplication.getPackageName(); // Construct action name.
+    
     baseApplication.registerReceiver(onDownloadComplete,new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
 
-//     cloudRequestorZzaqwb.setContext(baseApplication); //设置上下文
-      
     DownloadManager.Query q=new DownloadManager.Query(); // 构造查询对象。
       
     final DownloadManager downloadManager = (DownloadManager)baseApplication.getSystemService(Context.DOWNLOAD_SERVICE); // 获取下载管理器对象。
@@ -449,7 +449,6 @@ public class DownloadRequestor
     {
       // In this sample, we'll use the same text for the ticker and the expanded notification
     
-      actionName="com.stupidbeauty.upgrademanager."+ baseApplication.getPackageName(); // Construct action name.
 
       // The PendingIntent to launch our activity if the user selects this notification
       PendingIntent contentIntent = PendingIntent.getActivity(baseApplication, 0, new Intent(actionName), 0);
