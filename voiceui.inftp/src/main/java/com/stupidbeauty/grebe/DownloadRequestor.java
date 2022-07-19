@@ -1,6 +1,16 @@
 package com.stupidbeauty.grebe;
 
-// import com.stupidbeauty.voiceui.VoiceUi;
+import com.stupidbeauty.upgrademanager.R;
+import android.app.NotificationChannel;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.os.IBinder;
+import android.util.Log;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.LauncherApps;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageItemInfo;
+import android.content.pm.PackageManager;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageItemInfo;
 import android.content.pm.PackageManager;
@@ -16,15 +26,9 @@ import androidx.core.content.FileProvider;
 import android.database.ContentObserver;
 import com.koushikdutta.ion.Ion;
 import com.koushikdutta.ion.ProgressCallback;
-// import com.stupidbeauty.hxlauncher.application.HxLauncherApplication;
-// import com.stupidbeauty.hxlauncher.bean.ApplicationListData;
-// import com.stupidbeauty.hxlauncher.rpc.CloudRequestorZzaqwb;
-// import com.stupidbeauty.hxlauncher.LauncherActivity;
-// import com.stupidbeauty.hxlauncher.R;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
-// import com.stupidbeauty.hxlauncher.R;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -39,7 +43,6 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.ClipData;
-// import com.stupidbeauty.hxlauncher.service.DownloadNotificationService;
 import com.stupidbeauty.hxlauncher.rpc.DownloadResult;
 import com.stupidbeauty.hxlauncher.rpc.DownloadListener;
 import org.apache.commons.io.FileUtils;
@@ -61,30 +64,24 @@ import java.util.Collection;
 import java.util.HashMap;
 import com.koushikdutta.async.future.Future;
 import com.koushikdutta.async.future.FutureCallback;
-// import com.stupidbeauty.hxlauncher.application.HxLauncherApplication;
-// import com.stupidbeauty.hxlauncher.bean.ApplicationListData;
-// import com.stupidbeauty.hxlauncher.rpc.CloudRequestorZzaqwb;
 import com.stupidbeauty.hxlauncher.rpc.RecognizerResult;
-
 import org.apache.commons.io.FilenameUtils;
-
 import java.io.File;
 
 public class DownloadRequestor
 {
+  private String actionName; //!< Construct action name.
   private Notification continiusNotification=null; //!<记录的通知
   private DownloadRequestorInterface launcherActivity=null; //!< 启动活动。
   private int NOTIFICATION = 84951; //!< 通知编号。陈欣
   private boolean autoInstall=false; //!< Whether to auto install.
   private Context baseApplication = null; //!< Context
-
+  private String downloadedFilePath; //!< Remember downloaded file path.
   private String packageName=null; //!< 包名。
   public Future<File> fileDownloadFuture; //!<The file download future.
   private NotificationManager mNM;
 
   private static final String TAG="DownloadRequestor"; //!<输出调试信息了时使用的标记
-
-//   private CloudRequestorZzaqwb cloudRequestorZzaqwb=new CloudRequestorZzaqwb(); //!<云端请求发送器
 
   private long downloadId; //!<当前的下载编号
 
@@ -329,6 +326,8 @@ public class DownloadRequestor
     File downloadFolder = baseApplication.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
 
     final String wholePath =downloadFolder.getPath()+ File.separator  + fileName;
+    
+    downloadedFilePath=wholePath; // Remember downloaded file path.
 
     fileDownloadFuture= Ion.with(baseApplication)
       .load(targetUrl) 
@@ -368,7 +367,10 @@ public class DownloadRequestor
             {
               if (checkIsApkFile(wholePath)) // 是安装包文件。
               {
-                requestInstall(wholePath); // 要求安装。陈欣。
+                registerReceiverInstall(); // Register receiver of install.
+              
+                showNotificationInstall(); // Show notification to request install.
+//                 requestInstall(wholePath); // 要求安装。陈欣。
               } // if (checkIsApkFile(wholePath)) // 是安装包文件。
               else // 不是安装包。
               {
@@ -383,7 +385,108 @@ public class DownloadRequestor
         }
       });
     } //private void downloadByIon(Uri uri)
+    
+    /**
+    * Un register install receiver.
+    */
+    private void unregisterReceiverInstall() 
+    {
+      baseApplication.unregisterReceiver(mBroadcastReceiver);
+    } // private void unregisterReceiverInstall()
+    
+    /**
+    * Register receiver of install.
+    */
+    private void registerReceiverInstall() 
+    {
+      long startTimestamp=System.currentTimeMillis(); // 记录开始时间戳。
+      Log.w(TAG, "registerBroadcastReceiver, 1876, enter registerBroadcastReceiver, timestamp: " + System.currentTimeMillis()); //Debug.
+      Log.d(TAG, "registerBroadcastReceiver."); //Debug.
 
+      //注册全局的广播接收器：
+
+      //兰心输入法正在为某个软件包输入：
+      IntentFilter lanimeInputtingIntentFilter=new IntentFilter(); //创建意图过滤器。
+      lanimeInputtingIntentFilter.addAction(actionName); // Execute upgrade
+
+      baseApplication.registerReceiver(mBroadcastReceiver, lanimeInputtingIntentFilter); //注册广播事件接收器。
+    } // private void registerReceiverInstall()
+
+    /**
+     * 广播接收器。
+     */
+    private final BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver()
+    {
+      private final String TAG="BroadcastReceiver"; //!<输出调试信息时使用的标记。
+
+      @SuppressWarnings("ConstantConditions")
+      @Override
+      /**
+      * 接收到广播。
+      */
+      public void onReceive(Context context, Intent intent)
+      {
+        String action = intent.getAction(); //获取广播中带的动作字符串。
+
+        Log.d(TAG,"1587, onReceive,got broadcast:"+action + ", equals package_added?: " + (Intent.ACTION_PACKAGE_ADDED.equals(action))); //Debug.
+
+        if (actionName.equals(action)) // Upgrade.
+        {
+          requestInstall(downloadedFilePath); // Request install.
+        
+          unregisterReceiverInstall(); // Un register install receiver.
+        } //if (Constants.NativeMessage.APPLICATION_LAUNCHED.equals(action)) //虚拟卡启动结果。
+        else if (Intent.ACTION_WALLPAPER_CHANGED.equals(action)) //壁纸变化。
+        {
+        } //else if (Intent.ACTION_PACKAGE_ADDED.equals(action)) //应用被安装。
+      } //public void onReceive(Context context, Intent intent)
+    }; //private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver()
+
+    /**
+    * Show notification to request install.
+    */
+    private void showNotificationInstall() 
+    {
+      // In this sample, we'll use the same text for the ticker and the expanded notification
+    
+      actionName="com.stupidbeauty.upgrademanager."+ baseApplication.getPackageName(); // Construct action name.
+
+      // The PendingIntent to launch our activity if the user selects this notification
+      PendingIntent contentIntent = PendingIntent.getActivity(baseApplication, 0, new Intent(actionName), 0);
+
+      CharSequence downloadingText=baseApplication.getText(R.string.foundNewVersion); // 构造字符串，正在下载。陈欣。
+
+      NotificationChannel chan = new NotificationChannel( "#include", "My Foreground Service", NotificationManager.IMPORTANCE_LOW);
+            
+      mNM.createNotificationChannel(chan);
+    
+      ApplicationInfo applicationInfo = baseApplication.getApplicationInfo(); // Get application info object.
+    
+      int applicationIcon=applicationInfo.icon; //获取应用程序的图标。
+      int applicationLabel=applicationInfo.labelRes; //获取应用程序的文字。
+
+      CharSequence text = baseApplication.getText(applicationLabel);
+
+      // Set the info for the views that show in the notification panel.
+      Notification notification = new Notification.Builder(baseApplication)
+        //       .setSmallIcon(R.drawable.ic_launcher)  // the status icon
+        .setSmallIcon(applicationIcon)  // the status icon
+        .setTicker(text)  // the status text
+        .setWhen(System.currentTimeMillis())  // the time stamp
+        .setContentTitle(baseApplication.getText(applicationLabel))  // the label of the entry
+        //       .setContentTitle(applicationLabel)  // the label of the entry
+        .setContentText(downloadingText)  // the contents of the entry
+        .setContentIntent(contentIntent)  // The intent to send when the entry is clicked
+        .setPriority(Notification.PRIORITY_HIGH)   // heads-up
+        .setChannelId("#include")
+        .build();
+
+    continiusNotification=notification; //记录通知
+
+    // Send the notification.
+    mNM.notify(NOTIFICATION, notification);
+
+    } // private void showNotificationInstall()
 
     /**
      * 使用云端请求器来下载。
