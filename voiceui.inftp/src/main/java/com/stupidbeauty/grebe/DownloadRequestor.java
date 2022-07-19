@@ -453,7 +453,7 @@ public class DownloadRequestor
     
 
       // The PendingIntent to launch our activity if the user selects this notification
-      PendingIntent contentIntent = PendingIntent.getActivity(baseApplication, 0, new Intent(actionName), 0);
+      PendingIntent contentIntent = PendingIntent.getBroadcast(baseApplication, 0, new Intent(actionName), 0); // Set a broadcast intent.
 
       CharSequence downloadingText=baseApplication.getText(R.string.foundNewVersion); // 构造字符串，正在下载。陈欣。
 
