@@ -210,6 +210,8 @@ public class DownloadRequestor
     
     baseApplication.registerReceiver(onDownloadComplete,new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
 
+    mNM = (NotificationManager)baseApplication.getSystemService(Context.NOTIFICATION_SERVICE); // Get notification manager.
+
     DownloadManager.Query q=new DownloadManager.Query(); // 构造查询对象。
       
     final DownloadManager downloadManager = (DownloadManager)baseApplication.getSystemService(Context.DOWNLOAD_SERVICE); // 获取下载管理器对象。
