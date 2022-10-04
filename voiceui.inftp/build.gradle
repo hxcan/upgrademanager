@@ -1,0 +1,43 @@
+apply plugin: 'com.android.library'
+
+android 
+{
+  compileSdkVersion 28
+
+  defaultConfig 
+  {
+    minSdkVersion 14
+    targetSdkVersion 28
+    versionCode 751
+    versionName "2022.7.9"
+  }
+
+  buildTypes 
+  {
+    release 
+    {
+      minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+    }
+  }
+
+  aaptOptions {
+    noCompress 'v'
+  }
+}
+ 
+dependencies
+{
+  compile 'com.koushikdutta.async:androidasync:2.1.7'
+  implementation 'commons-io:commons-io:2.6'
+  compile 'com.github.hxcan:rotatingactiveuser:2021.11.29'
+  compile 'com.mcxiaoke.volley:library:1.0.19'
+  implementation 'com.github.hxcan:victoriafresh.android:2022.5.3'
+  compile 'com.upokecenter:cbor:4.4.4'
+  compile group: 'com.squareup.okhttp', name: 'okhttp', version: '1.6.0'
+  implementation 'com.squareup.okhttp3:okhttp:4.9.2'
+  compile group: 'com.koushikdutta.ion', name: 'ion', version: '2.1.7'
+  implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+  implementation 'androidx.appcompat:appcompat:1.2.0'
+  implementation("io.github.g00fy2:versioncompare:1.4.1")
+}
