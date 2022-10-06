@@ -68,71 +68,57 @@ public class LoadVoicePackageUrlMapTask extends AsyncTask<Object, Void, Object>
 
   private void  loadVoicePackageUrlMapCbor() // 载入语音识别结果与下载网址之间的映射。使用CBOR。陈欣。
   {
-//     String qrcFileName="voicePackageUrlMap.cbor.cx"; //文件名。
-//     String fullQrcFileName=":/VoicePackageUrlMapInternationalization/"+qrcFileName; //构造完整的qrc文件名。
-
-//     VFile qrcHtmlFile=new VFile(launcherActivity.getContext(), fullQrcFileName); //qrc网页文件。
-
     File photoFile=new File(filePath); // The data file.
 
     try
     {
-    byte[] photoBytes= FileUtils.readFileToByteArray(photoFile); //将照片文件内容全部读取。
+      byte[] photoBytes= FileUtils.readFileToByteArray(photoFile); //将照片文件内容全部读取。
 
-    
-//     byte[] photoBytes= qrcHtmlFile.getFileContent(); //将照片文件内容全部读取。
-        
-    CBORObject videoStreamMessage= CBORObject.DecodeFromBytes(photoBytes); //解析消息。
-        
-    //         陈欣
+      voicePackageUrlMap=new HashMap<>(); //创建映射。
+      packageNameUrlMap=new HashMap<>(); //创建映射
+      packageNameInstallerTypeMap=new HashMap<>(); // Create map of installer type.
+      packageNameInformationUrlMap=new HashMap<>(); // 创建映射。
+      packageNameVersionNameMap=new HashMap<>(); // 创建映射。陈欣
+      packageNameApplicationNameMap=new HashMap<>(); //创建映射
 
-    Collection<CBORObject> subFilesList=videoStreamMessage.get("voicePackageMapJsonItemList").getValues();
-        
-    voicePackageUrlMap=new HashMap<>(); //创建映射。
-    packageNameUrlMap=new HashMap<>(); //创建映射
-    packageNameInstallerTypeMap=new HashMap<>(); // Create map of installer type.
-    packageNameInformationUrlMap=new HashMap<>(); // 创建映射。
-    packageNameVersionNameMap=new HashMap<>(); // 创建映射。陈欣
-    packageNameApplicationNameMap=new HashMap<>(); //创建映射
+      CBORObject videoStreamMessage= CBORObject.DecodeFromBytes(photoBytes); //解析消息。
 
-    for (CBORObject currentSubFile: subFilesList) //一个个子文件地比较其文件名。
-    {
-      String voiceCommand=currentSubFile.get("voiceCommand").AsString();
-      String packageUrl=currentSubFile.get("packageUrl").AsString();
-      String installerType=currentSubFile.get("installerType").AsString(); // Get installer type. xapk or apk
-      String packageName=currentSubFile.get("packageName").AsString();
-      String informationUrl=currentSubFile.get("informationUrl").AsString(); // 获取信息页面地址。
-            
-      CBORObject versionNameObject=currentSubFile.get("versionName");
-            
-      if (versionNameObject!=null)
+      Collection<CBORObject> subFilesList=videoStreamMessage.get("voicePackageMapJsonItemList").getValues();
+
+      for (CBORObject currentSubFile: subFilesList) //一个个子文件地比较其文件名。
       {
-        String versionName=versionNameObject.AsString();
+        String voiceCommand=currentSubFile.get("voiceCommand").AsString();
+        String packageUrl=currentSubFile.get("packageUrl").AsString();
+        String installerType=currentSubFile.get("installerType").AsString(); // Get installer type. xapk or apk
+        String packageName=currentSubFile.get("packageName").AsString();
+        String informationUrl=currentSubFile.get("informationUrl").AsString(); // 获取信息页面地址。
+              
+        CBORObject versionNameObject=currentSubFile.get("versionName");
+            
+        if (versionNameObject!=null)
+        {
+          String versionName=versionNameObject.AsString();
 
-        packageNameVersionNameMap.put(packageName, versionName); // 加入映射。
-      } //versionNameObject
-                
-      voicePackageUrlMap.put(voiceCommand, packageUrl); //加入映射。
-      packageNameUrlMap.put(packageName, packageUrl); //加入映射。
-      packageNameInstallerTypeMap.put(packageName, installerType); // 加入映射。 installer type.
-      packageNameApplicationNameMap.put( packageName, voiceCommand); //加入映射，包名与应用程序名的映射
-      packageNameInformationUrlMap.put(packageName, informationUrl); // 加入映射，包名与信息页面地址的映射。
+          packageNameVersionNameMap.put(packageName, versionName); // 加入映射。
+        } //versionNameObject
+                  
+        voicePackageUrlMap.put(voiceCommand, packageUrl); //加入映射。
+        packageNameUrlMap.put(packageName, packageUrl); //加入映射。
+        packageNameInstallerTypeMap.put(packageName, installerType); // 加入映射。 installer type.
+        packageNameApplicationNameMap.put( packageName, voiceCommand); //加入映射，包名与应用程序名的映射
+        packageNameInformationUrlMap.put(packageName, informationUrl); // 加入映射，包名与信息页面地址的映射。
+      } //for (FileMessageContainer.FileMessage currentSubFile:videoStreamMessage.getSubFilesList()) //一个个子文件地比较其
 
-//                 if (currentSubFile.get("name").AsString().equals(subFileName)) //正是这个文件。
-//                 {
-//                     foundSubFile=true; //找到了子文件。
-//                     subFile=currentSubFile; //记录。
-// 
-//                     break; //跳出。
-//                 } //if (currentSubFile.getName().equals(subFileName)) //正是这个文件。
-            } //for (FileMessageContainer.FileMessage currentSubFile:videoStreamMessage.getSubFilesList()) //一个个子文件地比较其
-
-            Log.d(TAG, "loadVoicePackageUrlMapCbor, packageNameApplicationNameMap list size: "+ packageNameApplicationNameMap.size()); //Debug.
+      Log.d(TAG, "loadVoicePackageUrlMapCbor, packageNameApplicationNameMap list size: "+ packageNameApplicationNameMap.size()); //Debug.
     }
     catch (IOException e)
     {
       e.printStackTrace();
     } //catch (IOException e)
+    catch (CBORException e)
+    {
+      e.printStackTrace();
+    } // catch (CBORException e)
   } //private void  loadVoicePackageUrlMapCbor()
 	
   @Override
