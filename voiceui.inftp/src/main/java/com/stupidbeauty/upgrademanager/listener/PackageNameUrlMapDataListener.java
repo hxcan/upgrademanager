@@ -12,6 +12,7 @@ import android.animation.ObjectAnimator;
 public interface PackageNameUrlMapDataListener 
 {
   public void setPackageNameUrlMap (HashMap<String, String> packageNameUrlMap);
+  public void setPackageNameInstallerTypeMap(HashMap<String, String> packageNameInstallerTypeMap); //!< set the package name installer type map.
   public void setPackageNameInformationUrlMap(HashMap<String, String> packageNameInformationUrlMap);
   public void setPackageNameVersionNameMap (HashMap<String, String> packageNameVersionNameMap);
 }

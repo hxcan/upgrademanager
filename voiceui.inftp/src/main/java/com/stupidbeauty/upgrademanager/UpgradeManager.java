@@ -55,6 +55,7 @@ public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePack
   private static final float BEEP_VOLUME = 0.20f;
   private HashMap<String, String> voiceUiTextSoundFileMap=null; //!< 声音内容与声音文件名之间的映射关系。
   private HashMap<String, String> packageNameUrlMap; //!< 包名与下载地址之间的映射关系。
+  private HashMap<String, String> packageNameInstallerTypeMap; //!< Map of package name to installer type.
   private PackageNameUrlMapDataListener packageNameUrlMapDataListener; //!< Package name url map data listener.
 
   /**
@@ -92,6 +93,21 @@ public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePack
       packageNameUrlMapDataListener.setPackageNameUrlMap(packageNameUrlMap);
     } // if (packageNameUrlMapDataListener!=null)
   } //public void setPackageNameUrlMap (HashMap<String, String> packageNameUrlMap)
+  
+  /**
+  * Set package name installer type map.
+  */
+  @Override
+  public void setPackageNameInstallerTypeMap(HashMap<String, String> packageNameInstallerTypeMap)
+  {
+    this.packageNameInstallerTypeMap=packageNameInstallerTypeMap;
+    
+    if (packageNameUrlMapDataListener!=null)
+    {
+      packageNameUrlMapDataListener.setPackageNameInstallerTypeMap(packageNameUrlMap);
+    }
+  } // public void setPackageNameInstallerTypeMap(HashMap<String, String> packageNameInstallerTypeMap)
+
   
   private HashMap<String, String> packageNameVersionNameMap; //!< 包名与可用版本号之间的映射关系。
   

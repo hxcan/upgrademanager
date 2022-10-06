@@ -59,6 +59,7 @@ public class LoadVoicePackageUrlMapTask extends AsyncTask<Object, Void, Object>
   }
 
   private HashMap<String, String> packageNameUrlMap; //!<包名与下载地址之间的映射关系。
+  private HashMap<String, String> packageNameInstallerTypeMap; //!< Map of package name to installer type.
   private HashMap<String, String> packageNameInformationUrlMap; //!<包名与信息页面地址之间的映射关系。
   private HashMap<String, String> packageNameVersionNameMap; //!< 包名与可用版本号之间的映射关系。
   private  HashMap<String, String > packageNameApplicationNameMap; //!<包名与应用程序名的映射
@@ -89,6 +90,7 @@ public class LoadVoicePackageUrlMapTask extends AsyncTask<Object, Void, Object>
         
     voicePackageUrlMap=new HashMap<>(); //创建映射。
     packageNameUrlMap=new HashMap<>(); //创建映射
+    packageNameInstallerTypeMap=new HashMap<>(); // Create map of installer type.
     packageNameInformationUrlMap=new HashMap<>(); // 创建映射。
     packageNameVersionNameMap=new HashMap<>(); // 创建映射。陈欣
     packageNameApplicationNameMap=new HashMap<>(); //创建映射
@@ -97,6 +99,7 @@ public class LoadVoicePackageUrlMapTask extends AsyncTask<Object, Void, Object>
     {
       String voiceCommand=currentSubFile.get("voiceCommand").AsString();
       String packageUrl=currentSubFile.get("packageUrl").AsString();
+      String installerType=currentSubFile.get("installerType").AsString(); // Get installer type. xapk or apk
       String packageName=currentSubFile.get("packageName").AsString();
       String informationUrl=currentSubFile.get("informationUrl").AsString(); // 获取信息页面地址。
             
@@ -111,6 +114,7 @@ public class LoadVoicePackageUrlMapTask extends AsyncTask<Object, Void, Object>
                 
       voicePackageUrlMap.put(voiceCommand, packageUrl); //加入映射。
       packageNameUrlMap.put(packageName, packageUrl); //加入映射。
+      packageNameInstallerTypeMap.put(packageName, installerType); // 加入映射。 installer type.
       packageNameApplicationNameMap.put( packageName, voiceCommand); //加入映射，包名与应用程序名的映射
       packageNameInformationUrlMap.put(packageName, informationUrl); // 加入映射，包名与信息页面地址的映射。
 
@@ -154,6 +158,7 @@ public class LoadVoicePackageUrlMapTask extends AsyncTask<Object, Void, Object>
   protected void onPostExecute(Object result)
   {
     launcherActivity.setPackageNameUrlMap(packageNameUrlMap);
+    launcherActivity.setPackageNameInstallerTypeMap(packageNameInstallerTypeMap); // Set package name installer type map.
     launcherActivity.setPackageNameVersionNameMap(packageNameVersionNameMap);
     launcherActivity.setPackageNameInformationUrlMap(packageNameInformationUrlMap); // 设置包名与信息页面地址之间的映射。
   } //protected void onPostExecute(Boolean result)
