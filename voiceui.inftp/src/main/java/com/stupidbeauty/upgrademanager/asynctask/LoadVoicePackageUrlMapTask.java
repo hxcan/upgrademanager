@@ -8,8 +8,8 @@ import com.upokecenter.cbor.CBORObject;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import android.annotation.SuppressLint;
-// import com.stupidbeauty.hxlauncher.bean.VoicePackageUrlMapData;
-import com.stupidbeauty.hxlauncher.bean.WakeLockPackageNameSetData;
+import com.upokecenter.cbor.CBORException;
+// import com.stupidbeauty.hxlauncher.bean.WakeLockPackageNameSetData;
 import com.stupidbeauty.hxlauncher.datastore.RuntimeInformationStore;
 import java.util.Locale;
 import com.google.gson.Gson;
@@ -41,15 +41,13 @@ import android.content.pm.ResolveInfo;
 import android.content.pm.ShortcutInfo;
 import android.graphics.drawable.AnimationDrawable;
 import android.util.Pair;
-// import com.stupidbeauty.hxlauncher.bean.VoicePackageMapJsonItem;
-// import com.stupidbeauty.hxlauncher.bean.VoicePackageUrlMapData;
-import com.stupidbeauty.hxlauncher.bean.WakeLockPackageNameSetData;
+import com.stupidbeauty.upgrademanager.bean.FieldCode;
+// import com.stupidbeauty.hxlauncher.bean.WakeLockPackageNameSetData;
 import com.stupidbeauty.hxlauncher.datastore.RuntimeInformationStore;
 
 public class LoadVoicePackageUrlMapTask extends AsyncTask<Object, Void, Object>
 {
   private static final String TAG="LoadVoicePackageUrlMapTask"; //!< 输出调试信息时使用的标记。
-//   private VoicePackageUrlMapData voicePackageUrlMapData; //!<语音识别结果与软件包下载地址之间的映射。
   private String filePath; //!< file path.
   private HashMap<String, String> voicePackageUrlMap; //!<语音识别结果与包名之间的映射关系。
 
@@ -94,13 +92,25 @@ public class LoadVoicePackageUrlMapTask extends AsyncTask<Object, Void, Object>
         String informationUrl=currentSubFile.get("informationUrl").AsString(); // 获取信息页面地址。
               
         CBORObject versionNameObject=currentSubFile.get("versionName");
-            
-        if (versionNameObject!=null)
+
+        if (versionNameObject!=null) // Version name object exists
+        {
+        } //versionNameObject
+        else // Object not exist
+        {
+          versionNameObject=currentSubFile.get(FieldCode.VersionName); // Get by int key.
+        } // else // Object not exist
+                  
+        if (versionNameObject!=null) // Version name object exists
         {
           String versionName=versionNameObject.AsString();
 
           packageNameVersionNameMap.put(packageName, versionName); // 加入映射。
         } //versionNameObject
+        else // Object not exist
+        {
+          versionNameObject=currentSubFile.get(FieldCode.VersionName); // Get by int key.
+        } // else // Object not exist
                   
         voicePackageUrlMap.put(voiceCommand, packageUrl); //加入映射。
         packageNameUrlMap.put(packageName, packageUrl); //加入映射。
