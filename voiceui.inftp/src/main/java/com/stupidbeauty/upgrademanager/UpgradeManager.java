@@ -13,7 +13,7 @@ import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.StrictMode;
 import java.util.Map;
-import java.util.Random;
+// import java.util.Random;
 import java.util.Set;
 import java.util.Stack;
 import android.util.Log;
@@ -74,10 +74,10 @@ public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePack
       
       this.packageNameInformationUrlMap=packageNameInformationUrlMap;
       
-      if (packageNameUrlMapDataListener!=null)
+      if (packageNameUrlMapDataListener!=null) // Listenre exists.
       {
         packageNameUrlMapDataListener.setPackageNameInformationUrlMap(packageNameInformationUrlMap);
-      }
+      } // if (packageNameUrlMapDataListener!=null) // Listenre exists.
 	} // public void setPackageNameInformationUrlMap(HashMap<String, String> packageNameInformationUrlMap)
 
   /**
@@ -102,12 +102,11 @@ public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePack
   {
     this.packageNameInstallerTypeMap=packageNameInstallerTypeMap;
     
-    if (packageNameUrlMapDataListener!=null)
+    if (packageNameUrlMapDataListener!=null) // There is a listener.
     {
-      packageNameUrlMapDataListener.setPackageNameInstallerTypeMap(packageNameUrlMap);
-    }
+      packageNameUrlMapDataListener.setPackageNameInstallerTypeMap(packageNameInstallerTypeMap);
+    } // if (packageNameUrlMapDataListener!=null) // There is a listener.
   } // public void setPackageNameInstallerTypeMap(HashMap<String, String> packageNameInstallerTypeMap)
-
   
   private HashMap<String, String> packageNameVersionNameMap; //!< 包名与可用版本号之间的映射关系。
   
@@ -243,13 +242,13 @@ public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePack
     downloadRequestor = new DownloadRequestor(context); // Download requestor. For download url package map file.
 
     this.context = context;
-  }
+  } // public UpgradeManager(Context context) 
   
   @Override
   public Context getContext()
   {
     return context;
-  }
+  } // public Context getContext()
 
   private Context context; //!< Context.
 
@@ -282,22 +281,4 @@ public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePack
     
     downloadRequestor.requestDownloadUrl(internationalizationName, internationalizationName, applicationName, packageName, this, noAutoInstall); //要求下载网址
   } //public void commandRecognizebutton2()
-
-  /**
-    * 播放提示间，表明已经提交文字。
-    */
-  protected void playAlarm()
-  {
-    AudioManager audioManager=(AudioManager) (context.getSystemService(Context.AUDIO_SERVICE)); //获取声音管理器。
-
-    int ringerMode=audioManager.getRingerMode(); //获取声音模式。
-
-    if (ringerMode==AudioManager.RINGER_MODE_NORMAL) //有声音模式。
-    {
-      if (mediaPlayer!=null) // Media player exists.
-      {
-        mediaPlayer.start();
-      } // if (mediaPlayer!=null) // Media player exists.
-    } //if (ringerMode!=AudioManager.RINGER_MODE_NORMAL) //静音模式。
-  } //protected void playAlarm()
 }
