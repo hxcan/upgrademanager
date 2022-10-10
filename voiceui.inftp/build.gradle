@@ -31,7 +31,7 @@ dependencies
   compile 'com.koushikdutta.async:androidasync:2.1.7'
   implementation 'commons-io:commons-io:2.6'
   compile 'com.github.hxcan:rotatingactiveuser:2021.11.29'
-  compile 'com.github.hxcan:EXtremeZip-Android:2022.10.26'
+  compile 'com.github.hxcan:EXtremeZip-Android:2022.10.27'
   compile 'com.mcxiaoke.volley:library:1.0.19'
   implementation 'com.github.hxcan:victoriafresh.android:2022.5.3'
   compile 'com.upokecenter:cbor:4.4.4'
