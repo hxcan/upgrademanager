@@ -81,14 +81,20 @@ public class LoadVoicePackageUrlMapTask extends AsyncTask<Object, Void, Object>
     String result;
     
     EXtremeZip extremezip=new EXtremeZip(); // Create extremezip object.
-    
-    extremezip.exuz(filePath); // Compress.
-    
+
     Context baseApplication=launcherActivity.getContext(); // Get the context.
+
+    extremezip.exuz(filePath, baseApplication); // Compress.
     
-    File downloadFolder = baseApplication.getFilesDir(); // Get the files dire
+    
+//     File downloadFolder = baseApplication.getFilesDir(); // Get the files dire
+              File downloadFolder = baseApplication.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
+
 
     final String wholePath =downloadFolder.getPath()+ File.separator  + "voicePackageUrlMap.cbor.cx";
+    
+      Log.d(TAG, "exuzDataFile, whole path: "+ wholePath); // Debug.
+    
 
     result=wholePath;
     

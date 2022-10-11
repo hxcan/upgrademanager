@@ -325,7 +325,7 @@ public class DownloadRequestor
     String targetUrl=uri.toString(); //获取目标URL。
 
     String fileName=uri.getLastPathSegment(); // 获取文件名。陈欣
-        
+
     File downloadFolder = baseApplication.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
 
     final String wholePath =downloadFolder.getPath()+ File.separator  + fileName;
