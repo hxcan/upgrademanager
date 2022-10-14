@@ -138,6 +138,9 @@ public class LoadVoicePackageUrlMapTask extends AsyncTask<Object, Void, Object>
         {
           String extraPackageNameString = extraPackgaeName.AsString();
           
+          Log.d(TAG, "loadVoicePackageUrlMapCbor, extra package name: "+ extraPackageNameString + ", package name: " + packageName); //Debug.
+
+          
           extraPackageNames.add(extraPackageNameString);
         } // for(CBORObject extraPackgaeName: extraPackageNamesList)
               
@@ -168,6 +171,8 @@ public class LoadVoicePackageUrlMapTask extends AsyncTask<Object, Void, Object>
         packageNameApplicationNameMap.put( packageName, voiceCommand); //加入映射，包名与应用程序名的映射
         packageNameInformationUrlMap.put(packageName, informationUrl); // 加入映射，包名与信息页面地址的映射。
         packageNameExtraPackageNamesMap.put(packageName, extraPackageNames); // Add map, package name to extram package names list.
+                  Log.d(TAG, "loadVoicePackageUrlMapCbor, extra package name list: "+ extraPackageNames + ", package name: " + packageName); //Debug.
+
       } //for (FileMessageContainer.FileMessage currentSubFile:videoStreamMessage.getSubFilesList()) //一个个子文件地比较其
 
       Log.d(TAG, "loadVoicePackageUrlMapCbor, packageNameApplicationNameMap list size: "+ packageNameApplicationNameMap.size()); //Debug.
