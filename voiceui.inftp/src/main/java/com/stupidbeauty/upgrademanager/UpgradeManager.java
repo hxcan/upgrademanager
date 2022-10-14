@@ -13,7 +13,7 @@ import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.StrictMode;
 import java.util.Map;
-// import java.util.Random;
+import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 import android.util.Log;
@@ -56,6 +56,7 @@ public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePack
   private HashMap<String, String> voiceUiTextSoundFileMap=null; //!< 声音内容与声音文件名之间的映射关系。
   private HashMap<String, String> packageNameUrlMap; //!< 包名与下载地址之间的映射关系。
   private HashMap<String, String> packageNameInstallerTypeMap; //!< Map of package name to installer type.
+  private HashMap<String, List<String> > packageNameExtraPackageNamesMap; //!< Map of packge name to extra package names.
   private PackageNameUrlMapDataListener packageNameUrlMapDataListener; //!< Package name url map data listener.
 
   /**
@@ -66,12 +67,25 @@ public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePack
     packageNameUrlMapDataListener = listener;
   } // public void setPackageNameUrlMapDataListener(PackageNameUrlMapDataListener listener)
 
+  /**
+  * Set the map of package name to extra package names list.
+  */
+  public void setPackageNameExtraPackageNamesMap(HashMap<String, List<String> > packageNameExtraPackageNamesMap)
+  {
+//     陈欣
+      this.packageNameExtraPackageNamesMap=packageNameExtraPackageNamesMap;
+      
+      if (packageNameUrlMapDataListener!=null) // Listenre exists.
+      {
+        packageNameUrlMapDataListener.setPackageNameExtraPackageNamesMap(packageNameExtraPackageNamesMap);
+      } // if (packageNameUrlMapDataListener!=null) // Listenre exists.
+  } // public void setPackageNameExtraPackageNamesMap(HashMap<String, List<String> > packageNameExtraPackageNamesMap)
+  
   	/**
 	* 设置包名与信息页面地址之间的映射。
 	*/
 	public void setPackageNameInformationUrlMap(HashMap<String, String> packageNameInformationUrlMap) 
 	{
-      
       this.packageNameInformationUrlMap=packageNameInformationUrlMap;
       
       if (packageNameUrlMapDataListener!=null) // Listenre exists.
