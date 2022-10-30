@@ -58,6 +58,7 @@ public class LoadVoicePackageUrlMapTask extends AsyncTask<Object, Void, Object>
 {
   private static final String TAG="LoadVoicePackageUrlMapTask"; //!< 输出调试信息时使用的标记。
   private String filePath; //!< file path.
+  private String exzFilePath; //!< exz data file path.
   private HashMap<String, String> voicePackageUrlMap; //!<语音识别结果与包名之间的映射关系。
 
   public HashMap<String, String> getPackageNameUrlMap() 
@@ -184,6 +185,12 @@ public class LoadVoicePackageUrlMapTask extends AsyncTask<Object, Void, Object>
     catch (CBORException e)
     {
       e.printStackTrace();
+
+      Log.d(TAG, "loadVoicePackageUrlMapCbor, exz data file partly downloaded, deleting: "+ exzFilePath); //Debug.
+
+      File exzDataFile=new File(exzFilePath); // The exz data file object.
+      
+      exzDataFile.delete(); // Delete the exz data file.
     } // catch (CBORException e)
   } //private void  loadVoicePackageUrlMapCbor()
 	
@@ -193,9 +200,9 @@ public class LoadVoicePackageUrlMapTask extends AsyncTask<Object, Void, Object>
     Boolean result=false; //结果，是否成功。
 
     launcherActivity=(LoadVoicePackageUrlMapInterface)(params[0]); // 获取映射对象
-    filePath=(String)(params[1]); // file path. compressed.
+    exzFilePath=(String)(params[1]); // file path. compressed.
     
-    filePath=exuzDataFile(filePath); // uncompress the compressed data file.
+    filePath=exuzDataFile(exzFilePath); // uncompress the compressed data file.
             
     loadVoicePackageUrlMapCbor(); // 载入语音识别结果与下载网址之间的映射。使用CBOR。陈欣。
             
