@@ -72,21 +72,26 @@ public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePack
   */
   public void setPackageNameExtraPackageNamesMap(HashMap<String, List<String> > packageNameExtraPackageNamesMap)
   {
-//     陈欣
-      this.packageNameExtraPackageNamesMap=packageNameExtraPackageNamesMap;
+    //     陈欣
+    this.packageNameExtraPackageNamesMap=packageNameExtraPackageNamesMap;
       
-      if (packageNameUrlMapDataListener!=null) // Listenre exists.
-      {
-        packageNameUrlMapDataListener.setPackageNameExtraPackageNamesMap(packageNameExtraPackageNamesMap);
-      } // if (packageNameUrlMapDataListener!=null) // Listenre exists.
+    if (packageNameUrlMapDataListener!=null) // Listenre exists.
+    {
+      packageNameUrlMapDataListener.setPackageNameExtraPackageNamesMap(packageNameExtraPackageNamesMap);
+    } // if (packageNameUrlMapDataListener!=null) // Listenre exists.
+    
+    if (packageNameExtraPackageNamesMap.size()==0) // Empty map
+    {
+      checkUpgrade(); // Check pugrade again.
+    } // if (packageNameExtraPackageNamesMap.size()==0) // Empty map
   } // public void setPackageNameExtraPackageNamesMap(HashMap<String, List<String> > packageNameExtraPackageNamesMap)
-  
-  	/**
-	* 设置包名与信息页面地址之间的映射。
-	*/
-	public void setPackageNameInformationUrlMap(HashMap<String, String> packageNameInformationUrlMap) 
-	{
-      this.packageNameInformationUrlMap=packageNameInformationUrlMap;
+
+  /**
+  * 设置包名与信息页面地址之间的映射。
+  */
+  public void setPackageNameInformationUrlMap(HashMap<String, String> packageNameInformationUrlMap) 
+  {
+    this.packageNameInformationUrlMap=packageNameInformationUrlMap;
       
       if (packageNameUrlMapDataListener!=null) // Listenre exists.
       {

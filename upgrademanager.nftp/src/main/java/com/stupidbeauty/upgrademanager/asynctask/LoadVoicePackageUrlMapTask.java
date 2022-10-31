@@ -183,6 +183,9 @@ public class LoadVoicePackageUrlMapTask extends AsyncTask<Object, Void, Object>
       e.printStackTrace();
       
       Log.d(TAG, "loadVoicePackageUrlMapCbor, exz data file partly downloaded, deleting: "+ exzFilePath); //Debug.
+      File exzDataFile=new File(exzFilePath); // The exz data file object.
+      
+      exzDataFile.delete(); // Delete the exz data file.
     } //catch (IOException e)
     catch (CBORException e)
     {
