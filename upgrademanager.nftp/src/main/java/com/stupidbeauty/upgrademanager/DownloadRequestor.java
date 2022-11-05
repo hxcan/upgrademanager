@@ -1,4 +1,4 @@
-package com.stupidbeauty.grebe;
+package com.stupidbeauty.upgrademanager;
 
 import com.stupidbeauty.upgrademanager.R;
 import android.app.NotificationChannel;

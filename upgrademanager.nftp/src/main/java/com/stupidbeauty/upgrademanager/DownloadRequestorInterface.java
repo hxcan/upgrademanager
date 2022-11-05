@@ -1,4 +1,4 @@
-package com.stupidbeauty.grebe;
+package com.stupidbeauty.upgrademanager;
 
 public interface DownloadRequestorInterface
 {

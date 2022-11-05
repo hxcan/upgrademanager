@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.HashMap;
 import android.content.Context;
 import com.stupidbeauty.victoriafresh.VFile;
-import com.stupidbeauty.grebe.DownloadRequestor;
+// import com.stupidbeauty.grebe.DownloadRequestor;
 import android.view.View;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
