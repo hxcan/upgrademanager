@@ -43,8 +43,8 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.ClipData;
-import com.stupidbeauty.hxlauncher.rpc.DownloadResult;
-import com.stupidbeauty.hxlauncher.rpc.DownloadListener;
+// import com.stupidbeauty.hxlauncher.rpc.DownloadResult;
+// import com.stupidbeauty.hxlauncher.rpc.DownloadListener;
 import org.apache.commons.io.FileUtils;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
@@ -64,7 +64,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import com.koushikdutta.async.future.Future;
 import com.koushikdutta.async.future.FutureCallback;
-import com.stupidbeauty.hxlauncher.rpc.RecognizerResult;
+// import com.stupidbeauty.hxlauncher.rpc.RecognizerResult;
 import org.apache.commons.io.FilenameUtils;
 import java.io.File;
 
@@ -218,42 +218,16 @@ public class DownloadRequestor
     final DownloadManager downloadManager = (DownloadManager)baseApplication.getSystemService(Context.DOWNLOAD_SERVICE); // 获取下载管理器对象。
   }
 
-  DownloadListener voiceCommandListerner=new DownloadListener() 
+  /**
+  * Report download finished.
+  */
+  private void notifyDownloadFinish(String wholePath)
   {
-    private static final String TAG="RecognizerListener"; //!<输出调试信息时使用的标记。
-
-    @Override
-    public void onResult(DownloadResult recognizerResult, boolean isFinalResult) 
+    if (launcherActivity!=null)
     {
-      String wholePath=recognizerResult.getResultString(); // 获取文件路径。
-
-        File apkFile=new File( wholePath);
-            
-        String apkFilePath= wholePath; // 获取路径。
-
-        //             陈欣，安装
-        requestInstall(apkFilePath); // 要求安装。
-      }
-
-      @Override
-      public void onError(com.stupidbeauty.hxlauncher.rpc.SpeechError speechError) 
-      {
-        Log.d(TAG, "192, onError "); //Debug.
-            
-        notifyDownloadFail(); // 通知，下载失败。
-      }
-    };
-    
-    /**
-    * Report download finished.
-    */
-    private void notifyDownloadFinish(String wholePath)
-    {
-      if (launcherActivity!=null)
-      {
-        launcherActivity.reportDownloadFinished(packageName, wholePath); // 报告，下载 finished.
-      }
-    } // private void notifyDownloadFinish()
+      launcherActivity.reportDownloadFinished(packageName, wholePath); // 报告，下载 finished.
+    }
+  } // private void notifyDownloadFinish()
     
   /**
   * 通知，下载失败。
