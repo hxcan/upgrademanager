@@ -19,7 +19,7 @@ import android.util.Log;
 import android.widget.Toast;
 import java.io.IOException;
 import java.util.ArrayList;
-import com.stupidbeauty.hxlauncher.datastore.RuntimeInformationStore;
+// import com.stupidbeauty.hxlauncher.datastore.RuntimeInformationStore;
 import java.util.Locale;
 import com.google.gson.Gson;
 import com.stupidbeauty.upgrademanager.Constants;
@@ -52,7 +52,7 @@ import android.graphics.drawable.AnimationDrawable;
 import android.util.Pair;
 import com.stupidbeauty.upgrademanager.bean.FieldCode;
 import com.stupidbeauty.extremezip.EXtremeZip;
-import com.stupidbeauty.hxlauncher.datastore.RuntimeInformationStore;
+// import com.stupidbeauty.hxlauncher.datastore.RuntimeInformationStore;
 
 public class LoadVoicePackageUrlMapTask extends AsyncTask<Object, Void, Object>
 {
