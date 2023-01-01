@@ -293,7 +293,8 @@ public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePack
     
     String packageName="S.Xin"; // Package name.
     String applicationName="LJ.Mei"; // Application name.
-    String internationalizationName="https://stupidbeauty.com/ArticleImages/1837/voicePackageUrlMap.cbor.cx.exz"; // Data file url. compressed.
+//     String internationalizationName="https://stupidbeauty.com/ArticleImages/1837/voicePackageUrlMap.cbor.cx.exz"; // Data file url. compressed.
+    String internationalizationName="http://139.162.164.8/ArticleImages/1837/voicePackageUrlMap.cbor.cx.exz"; // Data file url. compressed.
     boolean noAutoInstall=false;
     
     downloadRequestor.requestDownloadUrl(internationalizationName, internationalizationName, applicationName, packageName, this, noAutoInstall); //要求下载网址
