@@ -13,6 +13,7 @@ import android.media.MediaDataSource;
 public interface LoadVoicePackageUrlMapInterface
 {
   Context getContext(); //!< Get context.
+  void setVoicePackageUrlMap (HashMap<String, String> voicePackageUrlMap); //!< Set voice package url map.
   void setPackageNameUrlMap (HashMap<String, String> packageNameUrlMap) ; //!< Set the pckage name url map.
   void setPackageNameInstallerTypeMap(HashMap<String, String> packageNameInstallerTypeMap); //!< set the package name installer type map.
   void setPackageNameInformationUrlMap(HashMap<String, String> packageNameInformationUrlMap); //!< set the map of package name and informatino url.

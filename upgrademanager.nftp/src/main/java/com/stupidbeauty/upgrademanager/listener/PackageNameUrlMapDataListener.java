@@ -16,6 +16,7 @@ import android.media.MediaDataSource;
 
 public interface PackageNameUrlMapDataListener 
 {
+  public void setVoicePackageUrlMap (HashMap<String, String> voicePackageUrlMap); //!< Set voice package url map.
   public void setPackageNameUrlMap (HashMap<String, String> packageNameUrlMap);
   public void setPackageNameInstallerTypeMap(HashMap<String, String> packageNameInstallerTypeMap); //!< set the package name installer type map.
   public void setPackageNameExtraPackageNamesMap(HashMap<String, List<String> > packageNameExtraPackageNamesMap); //!< Set the map of package name to extra package names list.

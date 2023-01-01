@@ -53,6 +53,7 @@ public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePack
   private static final float BEEP_VOLUME = 0.20f;
   private HashMap<String, String> voiceUiTextSoundFileMap=null; //!< 声音内容与声音文件名之间的映射关系。
   private HashMap<String, String> packageNameUrlMap; //!< 包名与下载地址之间的映射关系。
+	private HashMap<String, String> voicePackageUrlMap; //!<语音识别结果与包名之间的映射关系。
   private HashMap<String, String> packageNameInstallerTypeMap; //!< Map of package name to installer type.
   private HashMap<String, List<String> > packageNameExtraPackageNamesMap; //!< Map of packge name to extra package names.
   private PackageNameUrlMapDataListener packageNameUrlMapDataListener; //!< Package name url map data listener.
@@ -108,6 +109,20 @@ public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePack
     if (packageNameUrlMapDataListener!=null)
     {
       packageNameUrlMapDataListener.setPackageNameUrlMap(packageNameUrlMap);
+    } // if (packageNameUrlMapDataListener!=null)
+  } //public void setPackageNameUrlMap (HashMap<String, String> packageNameUrlMap)
+  
+  /**
+  * 设置应用程序名字与下载地址之间的映射关系。
+  */
+  @Override
+  public void setVoicePackageUrlMap (HashMap<String, String> voicePackageUrlMap) 
+  {
+    this.voicePackageUrlMap=voicePackageUrlMap;
+    
+    if (packageNameUrlMapDataListener!=null)
+    {
+      packageNameUrlMapDataListener.setVoicePackageUrlMap(voicePackageUrlMap);
     } // if (packageNameUrlMapDataListener!=null)
   } //public void setPackageNameUrlMap (HashMap<String, String> packageNameUrlMap)
   
