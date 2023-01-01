@@ -309,7 +309,7 @@ public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePack
   {
 //     HxLauncherApplication hxlauncherApplication=HxLauncherApplication.getInstance(); // 获取应用对象。
 
-    String fileName="voicePackageUrlMap.cbor.cx";
+    String fileName="voicePackageUrlMap.cbor.cx.exz";
 
     File downloadFolder = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
 

@@ -86,8 +86,13 @@ public class LoadVoicePackageUrlMapTask extends AsyncTask<Object, Void, Object>
 
     Context baseApplication=launcherActivity.getContext(); // Get the context.
 
-    extremezip.exuz(filePath, baseApplication); // Compress.
-    
+    try
+    {
+      extremezip.exuz(filePath, baseApplication); // Compress.
+    }
+    catch(ClassCastException e)
+    {
+    }
     
     File downloadFolder = baseApplication.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
 
