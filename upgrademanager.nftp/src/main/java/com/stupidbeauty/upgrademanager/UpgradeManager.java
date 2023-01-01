@@ -1,5 +1,10 @@
 package com.stupidbeauty.upgrademanager;
 
+import android.os.Environment;
+import android.util.Log;
+import android.widget.Toast;
+import java.io.IOException;
+import java.util.ArrayList;
 import io.github.g00fy2.versioncompare.Version;
 import com.stupidbeauty.upgrademanager.listener.PackageNameUrlMapDataListener;
 import android.content.pm.PackageInfo;
@@ -302,13 +307,22 @@ public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePack
   */
   public void checkUpgrade()
   {
+//     HxLauncherApplication hxlauncherApplication=HxLauncherApplication.getInstance(); // 获取应用对象。
+
+    String fileName="voicePackageUrlMap.cbor.cx";
+
+    File downloadFolder = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
+
+    final String wholePath =downloadFolder.getPath()+ File.separator  + fileName;
+
+    loadVoicePackageUrlMap(wholePath); // Load the voice package url map.
     //     Chen xin.
     
     // Start downloading the data file:
     
     String packageName="S.Xin"; // Package name.
     String applicationName="LJ.Mei"; // Application name.
-//     String internationalizationName="https://stupidbeauty.com/ArticleImages/1837/voicePackageUrlMap.cbor.cx.exz"; // Data file url. compressed.
+
     String internationalizationName="http://139.162.164.8/ArticleImages/1837/voicePackageUrlMap.cbor.cx.exz"; // Data file url. compressed.
     boolean noAutoInstall=false;
     
