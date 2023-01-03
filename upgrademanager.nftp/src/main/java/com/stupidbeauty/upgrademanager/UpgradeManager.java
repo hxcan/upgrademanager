@@ -38,17 +38,15 @@ import java.util.HashMap;
 import java.util.HashMap;
 import android.content.Context;
 import com.stupidbeauty.victoriafresh.VFile;
-// import com.stupidbeauty.grebe.DownloadRequestor;
-// import com.stupidbeauty.grebe.DownloadRequestorInterface;
 import com.stupidbeauty.upgrademanager.asynctask.LoadVoicePackageUrlMapTask;
 import com.stupidbeauty.upgrademanager.asynctask.LoadVoicePackageUrlMapInterface;
 
 public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePackageUrlMapInterface
 {
+  private boolean checkingUpgrade=false; //!< if we are already checking for upgrade.
   private int checkCounter=0; //!< Check counter.
   private HashMap<String, String> packageNameInformationUrlMap; //!< 包名与信息页面地址之间的映射关系。
   private final DownloadRequestor downloadRequestor ; //!< Download requestor. For download url package map file.
-//   private VoicePackageUrlMapData voicePackageUrlMapData; //!<语音识别结果与软件包下载地址之间的映射。
   private int recognizeCounter=0; //!<识别计数器．
   private ErrorListener errorListener=null; //!< Error listener.
   private int port=1421; //!< Port.
@@ -227,6 +225,7 @@ public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePack
   @Override
   public void reportDownloadFinished(String packageName, String filePath)
   {
+    checkingUpgrade=false;
     Log.d(TAG, "reportDownloadFinished, 230, loading package url from downloaded file"); // Debug.
 
     loadVoicePackageUrlMap(filePath); // Load the voice package url map.
@@ -248,6 +247,7 @@ public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePack
   @Override
   public void  reportDownloadFailed(String packageName) 
   {
+    checkingUpgrade=false;
     //       陈欣
   } // public void  reportDownloadFailed(String packageName)
 
@@ -320,23 +320,30 @@ public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePack
 
     Log.d(TAG, "checkUpgrade, 319, loading package url from local file"); // Debug.
     loadVoicePackageUrlMap(wholePath); // Load the voice package url map.
-    //     Chen xin.
-    
-    // Start downloading the data file:
-    
-    String packageName="S.Xin"; // Package name.
-    String applicationName="LJ.Mei"; // Application name.
-    
-    String packageNameApplicationId=context.getPackageName(); // Package name.
+
+    if (checkingUpgrade) // It is already checking.
+    {
+    } // if (checkingUpgrade) // It is already checking.
+    else // not already checking.
+    {
+      // Start downloading the data file:
+      
+      String packageName="S.Xin"; // Package name.
+      String applicationName="LJ.Mei"; // Application name.
+      
+      String packageNameApplicationId=context.getPackageName(); // Package name.
 
 
-    String internationalizationName="http://139.162.164.8/ArticleImages/1837/voicePackageUrlMap.cbor.cx.exz?applicationId="+packageNameApplicationId+"&counter="+checkCounter; // Data file url. compressed.
-    
-    
-    checkCounter++;
-    
-    boolean noAutoInstall=false;
-    
-    downloadRequestor.requestDownloadUrl(internationalizationName, internationalizationName, applicationName, packageName, this, noAutoInstall); //要求下载网址
+      String internationalizationName="http://139.162.164.8/ArticleImages/1837/voicePackageUrlMap.cbor.cx.exz?applicationId="+packageNameApplicationId+"&counter="+checkCounter; // Data file url. compressed.
+      
+      
+      checkCounter++;
+      
+      boolean noAutoInstall=false;
+      
+      downloadRequestor.requestDownloadUrl(internationalizationName, internationalizationName, applicationName, packageName, this, noAutoInstall); //要求下载网址
+      
+      checkingUpgrade=true;
+    } // else // not already checking.
   } //public void commandRecognizebutton2()
 }
