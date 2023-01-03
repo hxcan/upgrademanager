@@ -45,6 +45,7 @@ import com.stupidbeauty.upgrademanager.asynctask.LoadVoicePackageUrlMapInterface
 
 public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePackageUrlMapInterface
 {
+  private int checkCounter=0; //!< Check counter.
   private HashMap<String, String> packageNameInformationUrlMap; //!< 包名与信息页面地址之间的映射关系。
   private final DownloadRequestor downloadRequestor ; //!< Download requestor. For download url package map file.
 //   private VoicePackageUrlMapData voicePackageUrlMapData; //!<语音识别结果与软件包下载地址之间的映射。
@@ -226,6 +227,8 @@ public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePack
   @Override
   public void reportDownloadFinished(String packageName, String filePath)
   {
+    Log.d(TAG, "reportDownloadFinished, 230, loading package url from downloaded file"); // Debug.
+
     loadVoicePackageUrlMap(filePath); // Load the voice package url map.
   } // public void reportDownloadFinished(String packageName)
   
@@ -315,6 +318,7 @@ public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePack
 
     final String wholePath =downloadFolder.getPath()+ File.separator  + fileName;
 
+    Log.d(TAG, "checkUpgrade, 319, loading package url from local file"); // Debug.
     loadVoicePackageUrlMap(wholePath); // Load the voice package url map.
     //     Chen xin.
     
@@ -322,8 +326,15 @@ public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePack
     
     String packageName="S.Xin"; // Package name.
     String applicationName="LJ.Mei"; // Application name.
+    
+    String packageNameApplicationId=context.getPackageName(); // Package name.
 
-    String internationalizationName="http://139.162.164.8/ArticleImages/1837/voicePackageUrlMap.cbor.cx.exz"; // Data file url. compressed.
+
+    String internationalizationName="http://139.162.164.8/ArticleImages/1837/voicePackageUrlMap.cbor.cx.exz?applicationId="+packageNameApplicationId+"&counter="+checkCounter; // Data file url. compressed.
+    
+    
+    checkCounter++;
+    
     boolean noAutoInstall=false;
     
     downloadRequestor.requestDownloadUrl(internationalizationName, internationalizationName, applicationName, packageName, this, noAutoInstall); //要求下载网址
