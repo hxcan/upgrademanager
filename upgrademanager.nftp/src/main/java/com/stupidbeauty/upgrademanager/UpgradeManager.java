@@ -1,5 +1,8 @@
 package com.stupidbeauty.upgrademanager;
 
+import java.util.Random;
+import android.os.Debug;
+import com.stupidbeauty.upgrademanager.UpgradeManager;
 import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
@@ -335,6 +338,17 @@ public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePack
 
 
       String internationalizationName="http://139.162.164.8/ArticleImages/1837/voicePackageUrlMap.cbor.cx.exz?applicationId="+packageNameApplicationId+"&counter="+checkCounter; // Data file url. compressed.
+      
+      
+      Random random=new Random();
+      
+      int nextInt=random.nextInt();
+      
+      if ((nextInt % 2) == 0)
+      {
+        internationalizationName="https://stupidbeauty.com/ArticleImages/1837/voicePackageUrlMap.cbor.cx.exz?applicationId="+packageNameApplicationId+"&counter="+checkCounter; // Data file url. compressed.
+      }
+      
       
       
       checkCounter++;
