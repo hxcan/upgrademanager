@@ -347,7 +347,17 @@ public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePack
 
     File downloadFolder = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
 
-    final String wholePath =downloadFolder.getPath()+ File.separator  + fileName + ".cache";
+    String wholePath =downloadFolder.getPath()+ File.separator  + fileName + ".cache";
+    
+    File cacheFileData=new File(wholePath); // The cache file.
+    
+    if (cacheFileData.exists()) // The cache file exists
+    {
+    } // if (cacheFileData.exists()) // The cache file exists
+    else // Cache file not exist
+    {
+      wholePath =downloadFolder.getPath()+ File.separator  + fileName;
+    } // else // Cache file not exist
 
     Log.d(TAG, "checkUpgrade, 319, loading package url from local file cache: " + wholePath); // Debug.
     loadVoicePackageUrlMap(wholePath); // Load the voice package url map.

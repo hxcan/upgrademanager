@@ -180,20 +180,20 @@ public class UmLoadVoicePackageUrlMapTask extends AsyncTask<Object, Void, Object
     {
 //       e.printStackTrace();
       
-      Log.d(TAG, "loadVoicePackageUrlMapCbor, 183, exz data file partly downloaded, deleting: "+ exzFilePath); //Debug.
-      File exzDataFile=new File(exzFilePath); // The exz data file object.
+      Log.d(TAG, "loadVoicePackageUrlMapCbor, 183, exz data file partly downloaded, ignoring: "+ exzFilePath); //Debug.
+//       File exzDataFile=new File(exzFilePath); // The exz data file object.
       
-      exzDataFile.delete(); // Delete the exz data file.
+//       exzDataFile.delete(); // Delete the exz data file.
     } //catch (IOException e)
     catch (CBORException e)
     {
-      e.printStackTrace();
+//       e.printStackTrace();
 
-      Log.d(TAG, "loadVoicePackageUrlMapCbor, 192, exz data file partly downloaded, deleting: "+ exzFilePath); //Debug.
+      Log.d(TAG, "loadVoicePackageUrlMapCbor, 192, exz data file partly downloaded, ignoring: "+ exzFilePath); //Debug.
 
-      File exzDataFile=new File(exzFilePath); // The exz data file object.
+//       File exzDataFile=new File(exzFilePath); // The exz data file object.
       
-      exzDataFile.delete(); // Delete the exz data file.
+//       exzDataFile.delete(); // Delete the exz data file.
     } // catch (CBORException e)
   } //private void  loadVoicePackageUrlMapCbor()
 	
