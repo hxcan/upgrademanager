@@ -1,5 +1,10 @@
 package com.stupidbeauty.upgrademanager;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.IOFileFilter;
+import org.apache.commons.io.filefilter.TrueFileFilter;
+import java.io.File;
+import java.io.IOException;
 import java.util.Random;
 import android.os.Debug;
 import com.stupidbeauty.upgrademanager.UpgradeManager;
@@ -54,7 +59,7 @@ public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePack
   private ErrorListener errorListener=null; //!< Error listener.
   private int port=1421; //!< Port.
   private boolean allowActiveMode=true; //!<  Whether to allow active mode.
-  private static final String TAG="VoiceUi"; //!< 输出调试信息时使用的标记。
+  private static final String TAG="UpgradeManager"; //!< 输出调试信息时使用的标记。
   private String recordSoundFilePath; //!< 录音文件路径．
   private MediaPlayer mediaPlayer;
   private static final float BEEP_VOLUME = 0.20f;
@@ -230,8 +235,31 @@ public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePack
   {
     checkingUpgrade=false;
     Log.d(TAG, "reportDownloadFinished, 230, loading package url from downloaded file"); // Debug.
+    
+    File downloadedFile=new File(filePath); // Downloaded file.
+    
+    String directoryPath=downloadedFile.getParent(); // Parent directory path.
+    Log.d(TAG, "reportDownloadFinished, 237, directory: " + directoryPath); // Debug.
+    
+    String filePathCache=directoryPath + "/" + downloadedFile.getName() + ".cache"; // Cache file.
+    
+    File localCacheFile=new File(filePathCache); // Cache file.
+    localCacheFile.delete();
+    
+//     downloadedFile.copy(filePathCache);
 
-    loadVoicePackageUrlMap(filePath); // Load the voice package url map.
+    try
+    {
+      FileUtils.copyFile(downloadedFile, localCacheFile);
+    }
+    catch(IOException e)
+    {
+      e.printStackTrace();
+    }
+
+    Log.d(TAG, "reportDownloadFinished, 246, loading package url from local file cache: " + filePathCache); // Debug.
+
+    loadVoicePackageUrlMap(filePathCache); // Load the voice package url map.
   } // public void reportDownloadFinished(String packageName)
   
   /**
@@ -315,15 +343,13 @@ public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePack
   */
   public void checkUpgrade()
   {
-//     HxLauncherApplication hxlauncherApplication=HxLauncherApplication.getInstance(); // 获取应用对象。
-
     String fileName="voicePackageUrlMap.cbor.cx.exz";
 
     File downloadFolder = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
 
-    final String wholePath =downloadFolder.getPath()+ File.separator  + fileName;
+    final String wholePath =downloadFolder.getPath()+ File.separator  + fileName + ".cache";
 
-    Log.d(TAG, "checkUpgrade, 319, loading package url from local file"); // Debug.
+    Log.d(TAG, "checkUpgrade, 319, loading package url from local file cache: " + wholePath); // Debug.
     loadVoicePackageUrlMap(wholePath); // Load the voice package url map.
 
     if (checkingUpgrade) // It is already checking.
@@ -359,9 +385,11 @@ public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePack
       
       boolean noAutoInstall=false;
       
-      downloadRequestor.requestDownloadUrl(internationalizationName, internationalizationName, applicationName, packageName, this, noAutoInstall); //要求下载网址
+      Log.d(TAG, "checkUpgrade, 374, start actually checking upgrade, url: " + internationalizationName); // Debug.
+
+      downloadRequestor.requestDownloadUrl(internationalizationName, internationalizationName, applicationName, packageName, this, noAutoInstall); // 要求下载网址
       
       checkingUpgrade=true;
     } // else // not already checking.
   } //public void commandRecognizebutton2()
-}
+} // public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePackageUrlMapInterface
