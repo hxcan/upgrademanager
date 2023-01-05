@@ -344,7 +344,7 @@ public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePack
       
       int nextInt=random.nextInt();
       
-      if ((nextInt % 2) == 0)
+//       if ((nextInt % 2) == 0)
       {
         internationalizationName="https://stupidbeauty.com/ArticleImages/1837/voicePackageUrlMap.cbor.cx.exz?applicationId="+packageNameApplicationId+"&counter="+checkCounter; // Data file url. compressed.
       }
