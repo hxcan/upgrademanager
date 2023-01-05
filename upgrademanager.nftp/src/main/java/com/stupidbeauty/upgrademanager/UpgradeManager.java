@@ -250,6 +250,8 @@ public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePack
   @Override
   public void  reportDownloadFailed(String packageName) 
   {
+    Log.d(TAG, "reportDownloadFailed, 253, mark not checking upgrade"); // Debug.
+
     checkingUpgrade=false;
     //       陈欣
   } // public void  reportDownloadFailed(String packageName)
@@ -326,9 +328,11 @@ public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePack
 
     if (checkingUpgrade) // It is already checking.
     {
+      Log.d(TAG, "checkUpgrade, 331, already checking upgrade, ignore"); // Debug.
     } // if (checkingUpgrade) // It is already checking.
     else // not already checking.
     {
+      Log.d(TAG, "checkUpgrade, 335, start actually checking upgrade"); // Debug.
       // Start downloading the data file:
       
       String packageName="S.Xin"; // Package name.
