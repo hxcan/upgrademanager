@@ -6,7 +6,7 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
-import com.stupidbeauty.upgrademanager.asynctask.LoadVoicePackageUrlMapTask;
+// import com.stupidbeauty.upgrademanager.asynctask.LoadVoicePackageUrlMapTask;
 import java.lang.reflect.Type;
 import java.lang.reflect.Field;
 import com.upokecenter.cbor.CBORObject;
@@ -19,11 +19,9 @@ import android.util.Log;
 import android.widget.Toast;
 import java.io.IOException;
 import java.util.ArrayList;
-// import com.stupidbeauty.hxlauncher.datastore.RuntimeInformationStore;
 import java.util.Locale;
 import com.google.gson.Gson;
 import com.stupidbeauty.upgrademanager.Constants;
-// import com.stupidbeauty.hxlauncher.bean.ApplicationNamePair;
 import com.stupidbeauty.victoriafresh.VFile;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.IOFileFilter;
@@ -54,9 +52,9 @@ import com.stupidbeauty.upgrademanager.bean.FieldCode;
 import com.stupidbeauty.extremezip.EXtremeZip;
 // import com.stupidbeauty.hxlauncher.datastore.RuntimeInformationStore;
 
-public class LoadVoicePackageUrlMapTask extends AsyncTask<Object, Void, Object>
+public class UmLoadVoicePackageUrlMapTask extends AsyncTask<Object, Void, Object>
 {
-  private static final String TAG="LoadVoicePackageUrlMapTask"; //!< 输出调试信息时使用的标记。
+  private static final String TAG="UmLoadVoicePackageUrlMapTask"; //!< 输出调试信息时使用的标记。
   private String filePath; //!< file path.
   private String exzFilePath; //!< exz data file path.
   private HashMap<String, String> voicePackageUrlMap; //!<语音识别结果与包名之间的映射关系。
@@ -180,7 +178,7 @@ public class LoadVoicePackageUrlMapTask extends AsyncTask<Object, Void, Object>
     }
     catch (IOException e)
     {
-      e.printStackTrace();
+//       e.printStackTrace();
       
       Log.d(TAG, "loadVoicePackageUrlMapCbor, exz data file partly downloaded, deleting: "+ exzFilePath); //Debug.
       File exzDataFile=new File(exzFilePath); // The exz data file object.

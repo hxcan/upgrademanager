@@ -41,7 +41,7 @@ import java.util.HashMap;
 import java.util.HashMap;
 import android.content.Context;
 import com.stupidbeauty.victoriafresh.VFile;
-import com.stupidbeauty.upgrademanager.asynctask.LoadVoicePackageUrlMapTask;
+import com.stupidbeauty.upgrademanager.asynctask.UmLoadVoicePackageUrlMapTask;
 import com.stupidbeauty.upgrademanager.asynctask.LoadVoicePackageUrlMapInterface;
 
 public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePackageUrlMapInterface
@@ -239,7 +239,7 @@ public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePack
   */
   private void loadVoicePackageUrlMap(String filePath)
   {
-    LoadVoicePackageUrlMapTask translateRequestSendTask =new LoadVoicePackageUrlMapTask(); //创建异步任务。
+    UmLoadVoicePackageUrlMapTask translateRequestSendTask =new UmLoadVoicePackageUrlMapTask(); // 创建异步任务。
 
     translateRequestSendTask.execute(this, filePath); //执行任务。
   } //private void loadVoicePackageUrlMap()
