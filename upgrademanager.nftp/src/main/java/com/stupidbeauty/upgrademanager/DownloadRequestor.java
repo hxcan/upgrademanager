@@ -1,5 +1,20 @@
 package com.stupidbeauty.upgrademanager;
 
+import java.util.Timer;
+import java.util.TimerTask;
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import java.util.TimerTask;
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.Activity;
+// import com.stupidbeauty.voiceui.VoiceUi;
+import android.os.Handler;
+import android.os.Looper;
+import android.speech.SpeechRecognizer;
+import android.util.Log;
+import android.app.Application;
 import com.stupidbeauty.upgrademanager.R;
 import android.app.NotificationChannel;
 import android.os.AsyncTask;
@@ -64,12 +79,12 @@ import java.util.Collection;
 import java.util.HashMap;
 import com.koushikdutta.async.future.Future;
 import com.koushikdutta.async.future.FutureCallback;
-// import com.stupidbeauty.hxlauncher.rpc.RecognizerResult;
 import org.apache.commons.io.FilenameUtils;
 import java.io.File;
 
 public class DownloadRequestor
 {
+  private Timer timerObj = null; //!< The timer of cancelling download when no progress for a long time.
   private String actionName; //!< Construct action name.
   private Notification continiusNotification=null; //!<记录的通知
   private DownloadRequestorInterface launcherActivity=null; //!< 启动活动。
@@ -84,73 +99,6 @@ public class DownloadRequestor
   private static final String TAG="DownloadRequestor"; //!<输出调试信息了时使用的标记
 
   private long downloadId; //!<当前的下载编号
-
-  private BroadcastReceiver onDownloadComplete = new BroadcastReceiver() 
-  {
-//   04-01 08:46:40.772  3082  5366 W DownloadManager: [3203] Stop requested with status INSUFFICIENT_SPACE_ERROR: Failed to allocate 78744689 because only 60489728 allocatable
-// 04-01 08:46:40.772  3082  5366 D DownloadManager: [3203] Finished with status INSUFFICIENT_SPACE_ERROR
-
-    @Override
-    public void onReceive(Context context, Intent intent) 
-    {
-      //Fetching the download id received with the broadcast
-      long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
-      //Checking if the received broadcast is for our enqueued download by matching download id
-
-      if (downloadId == id) 
-      {
-        Toast.makeText(baseApplication, "Download Completed", Toast.LENGTH_SHORT).show();
-
-        Bundle extras=intent.getExtras(); //获取额外数据
-
-        Log.d(TAG, "onReceive, extras: " + extras); //Debug.
-
-        final DownloadManager dManager = (DownloadManager) baseApplication.getSystemService(Context.DOWNLOAD_SERVICE); //Get the download manager.
-
-        Uri uri = dManager.getUriForDownloadedFile(id);
-
-        Log.d(TAG, "onReceive, uri: " + uri); //Debug.
-
-        DownloadManager.Query q = new DownloadManager.Query();
-
-        q.setFilterById(downloadId);
-
-        Cursor c = ((DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE)).query(q);
-        if (c.moveToFirst()) 
-        {
-          int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
-
-          Log.d(TAG, "onReceive, status: " + status); //debug
-                    
-          if (status == DownloadManager.STATUS_SUCCESSFUL) // 下载成功。
-          {
-            int reason = (c.getInt(c.getColumnIndex(DownloadManager.COLUMN_REASON)));
-
-            Log.d(TAG, "onReceive, reason: " + reason); //debug.
-
-            String sourceUri = (c.getString(c.getColumnIndex(DownloadManager.COLUMN_URI)));
-
-            Log.d(TAG, "onReceive, source url: " + sourceUri); //debug.
-
-            String fullUrl = uri.toString();
-
-            String downloadFilePath = (c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI))).replace("file://", "");
-
-            Log.d(TAG, "onReceive, download file path: " + downloadFilePath); //debug.
-
-            requestInstall(downloadFilePath); //要求安装应用
-                      
-          } // if (status == DownloadManager.STATUS_SUCCESSFUL) // 下载成功。
-          else // 下载失败
-          {
-            notifyDownloadFail(); // 告知下载失败。
-          } // else // 下载失败
-        }
-
-        c.close(); //关闭游标
-      }
-    }
-  };
 
   /**
   * 要求安装应用
@@ -209,8 +157,6 @@ public class DownloadRequestor
     
     actionName="com.stupidbeauty.upgrademanager."+ baseApplication.getPackageName(); // Construct action name.
     
-    baseApplication.registerReceiver(onDownloadComplete,new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
-
     mNM = (NotificationManager)baseApplication.getSystemService(Context.NOTIFICATION_SERVICE); // Get notification manager.
 
     DownloadManager.Query q=new DownloadManager.Query(); // 构造查询对象。
@@ -291,12 +237,21 @@ public class DownloadRequestor
   } // private boolean checkIsApkFile(String apkFilePath)
   
   /**
+  * Cancel download.
+  */
+  public void cancelDownload()
+  {
+//     HxLauncherApplication baseApplication = HxLauncherApplication.getInstance(); //获取应用程序对象。
+    Ion.getDefault(baseApplication).cancelAll(baseApplication);
+  } // public void cancelDownload() // Cancel download.
+
+  /**
   * 使用离子下载来下载。
   * @param uri 要下载的网址。
   */
   private void downloadByIon(Uri uri)
   {
-    String targetUrl=uri.toString(); //获取目标URL。
+    final String targetUrl=uri.toString(); //获取目标URL。
 
     String fileName=uri.getLastPathSegment(); // 获取文件名。陈欣
 
@@ -314,7 +269,9 @@ public class DownloadRequestor
         @Override
         public void onProgress(long downloaded, long total) 
         {
-//           Log.d(TAG, "downloadByIon, progress: " + downloaded + "/" + total + ", " + targetUrl); // 报告进度。
+          timerObj.cancel(); // Cancel the timer of cancel.
+          startTimeoutCancelTimer(); // Start time out cancel timer.
+          Log.d(TAG, "downloadByIon, 274, progress: " + downloaded + "/" + total + ", " + targetUrl); // 报告进度。
         }
       })
       .setLogging(TAG, Log.DEBUG).write(new File( wholePath))
@@ -361,43 +318,79 @@ public class DownloadRequestor
           } //else // 下载完毕
         }
       });
+      startTimeoutCancelTimer(); // Start time out cancel timer.
     } //private void downloadByIon(Uri uri)
     
-    /**
-    * Un register install receiver.
-    */
-    private void unregisterReceiverInstall() 
+  /**
+  * Start time out cancel timer.
+  */
+  private void startTimeoutCancelTimer() 
+  {
+    //    chen xin.
+
+    timerObj = new Timer();
+    TimerTask timerTaskObj = new TimerTask() 
     {
-      baseApplication.unregisterReceiver(mBroadcastReceiver);
-    } // private void unregisterReceiverInstall()
+      public void run() 
+      {
+        Handler uiHandler = new Handler(Looper.getMainLooper());
+
+        Runnable runnable= new Runnable()
+        {
+          /**
+          * 具体执行的代码
+          */
+          public void run()
+          {
+            Log.d(TAG, "startTimeoutCancelTimer, 390, cancelling"); // Debug.
+
+            cancelDownload(); // Cancel download.
+              
+            notifyDownloadFail(); // Notify download fail.
+          } //public void run()
+        };
+
+        uiHandler.post(runnable);
+      }
+    };
+    timerObj.schedule(timerTaskObj, 60*1000); // 延时启动。
+  } // private void startTimeoutCancelTimer()
+  
+  /**
+  * Un register install receiver.
+  */
+  private void unregisterReceiverInstall() 
+  {
+    baseApplication.unregisterReceiver(mBroadcastReceiver);
+  } // private void unregisterReceiverInstall()
     
-    /**
-    * Register receiver of install.
-    */
-    private void registerReceiverInstall() 
-    {
-      long startTimestamp=System.currentTimeMillis(); // 记录开始时间戳。
-      Log.w(TAG, "registerBroadcastReceiver, 1876, enter registerBroadcastReceiver, timestamp: " + System.currentTimeMillis()); //Debug.
-      Log.d(TAG, "registerBroadcastReceiver."); //Debug.
+  /**
+  * Register receiver of install.
+  */
+  private void registerReceiverInstall() 
+  {
+    long startTimestamp=System.currentTimeMillis(); // 记录开始时间戳。
+    Log.w(TAG, "registerBroadcastReceiver, 1876, enter registerBroadcastReceiver, timestamp: " + System.currentTimeMillis()); //Debug.
+    Log.d(TAG, "registerBroadcastReceiver."); //Debug.
 
-      //注册全局的广播接收器：
+    //注册全局的广播接收器：
 
-      //兰心输入法正在为某个软件包输入：
-      IntentFilter lanimeInputtingIntentFilter=new IntentFilter(); //创建意图过滤器。
-      lanimeInputtingIntentFilter.addAction(actionName); // Execute upgrade
+    //兰心输入法正在为某个软件包输入：
+    IntentFilter lanimeInputtingIntentFilter=new IntentFilter(); //创建意图过滤器。
+    lanimeInputtingIntentFilter.addAction(actionName); // Execute upgrade
 
-      baseApplication.registerReceiver(mBroadcastReceiver, lanimeInputtingIntentFilter); //注册广播事件接收器。
-    } // private void registerReceiverInstall()
+    baseApplication.registerReceiver(mBroadcastReceiver, lanimeInputtingIntentFilter); //注册广播事件接收器。
+  } // private void registerReceiverInstall()
 
-    /**
-     * 广播接收器。
-     */
-    private final BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver()
-    {
-      private final String TAG="BroadcastReceiver"; //!<输出调试信息时使用的标记。
+  /**
+  * 广播接收器。
+  */
+  private final BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver()
+  {
+    private final String TAG="BroadcastReceiver"; //!<输出调试信息时使用的标记。
 
-      @SuppressWarnings("ConstantConditions")
-      @Override
+    @SuppressWarnings("ConstantConditions")
+    @Override
       /**
       * 接收到广播。
       */
