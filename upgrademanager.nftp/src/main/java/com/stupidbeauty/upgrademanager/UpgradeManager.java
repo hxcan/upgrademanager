@@ -51,6 +51,7 @@ import com.stupidbeauty.upgrademanager.asynctask.LoadVoicePackageUrlMapInterface
 
 public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePackageUrlMapInterface
 {
+  private long checkingStartTime=0; //!< 记录开始时间戳。
   private boolean checkingUpgrade=false; //!< if we are already checking for upgrade.
   private int checkCounter=0; //!< Check counter.
   private HashMap<String, String> packageNameInformationUrlMap; //!< 包名与信息页面地址之间的映射关系。
@@ -234,6 +235,8 @@ public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePack
   public void reportDownloadFinished(String packageName, String filePath)
   {
     checkingUpgrade=false;
+    checkingStartTime=0; // 记录开始时间戳。
+
     Log.d(TAG, "reportDownloadFinished, 230, loading package url from downloaded file"); // Debug.
     
     File downloadedFile=new File(filePath); // Downloaded file.
@@ -281,6 +284,8 @@ public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePack
     Log.d(TAG, "reportDownloadFailed, 253, mark not checking upgrade"); // Debug.
 
     checkingUpgrade=false;
+    checkingStartTime=0; // 记录开始时间戳。
+
     //       陈欣
   } // public void  reportDownloadFailed(String packageName)
 
@@ -339,6 +344,24 @@ public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePack
   } // private void startDownloadApk()
 
   /**
+  * Mark stuck checking upgrade
+  */
+  private void markStuckCheckingUpgrade()
+  {
+    if (checkingUpgrade) // It is already checking.
+    {
+      Log.d(TAG, "markStuckCheckingUpgrade, 353, already checking upgrade, checking the time started"); // Debug.
+      
+      long currentTime=System.currentTimeMillis(); // 记录开始时间戳。
+
+      if ((currentTime-checkingStartTime) > (1*60*60*1000)) // started 1 hour ago
+      {
+        checkingUpgrade=false;
+      } // if ((currentTime-checkingStartTime) > (1*60*60*1000)) // started 1 hour ago
+    } // if (checkingUpgrade) // It is already checking.
+  } // private void markStuckCheckingUpgrade()
+  
+  /**
   * Check upgrade
   */
   public void checkUpgrade()
@@ -361,6 +384,8 @@ public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePack
 
     Log.d(TAG, "checkUpgrade, 319, loading package url from local file cache: " + wholePath); // Debug.
     loadVoicePackageUrlMap(wholePath); // Load the voice package url map.
+    
+    markStuckCheckingUpgrade(); // Mark stuck checking upgrade
 
     if (checkingUpgrade) // It is already checking.
     {
@@ -400,6 +425,7 @@ public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePack
       downloadRequestor.requestDownloadUrl(internationalizationName, internationalizationName, applicationName, packageName, this, noAutoInstall); // 要求下载网址
       
       checkingUpgrade=true;
+      checkingStartTime=System.currentTimeMillis(); // 记录开始时间戳。
     } // else // not already checking.
   } //public void commandRecognizebutton2()
 } // public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePackageUrlMapInterface
