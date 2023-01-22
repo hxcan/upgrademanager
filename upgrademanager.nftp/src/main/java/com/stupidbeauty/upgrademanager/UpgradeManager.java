@@ -198,9 +198,14 @@ public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePack
 	 */
 	public String getAvailableVersionName(String packageName)
 	{
-      String result= packageNameVersionNameMap.get(packageName); // 获取可用 版本号名字。
-
-      return result;
+    String result= ""; // 获取可用 版本号名字。
+      
+    if (packageNameVersionNameMap!=null) // The map exists
+    {
+      result= packageNameVersionNameMap.get(packageName); // 获取可用 版本号名字。
+    } // if (packageNameVersionNameMap!=null) // The map exists
+      
+    return result;
 	} //public String getAvailableVersionName(String packageName)
 	
   /**
