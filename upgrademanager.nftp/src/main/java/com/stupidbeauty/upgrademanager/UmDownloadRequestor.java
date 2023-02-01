@@ -82,7 +82,7 @@ import com.koushikdutta.async.future.FutureCallback;
 import org.apache.commons.io.FilenameUtils;
 import java.io.File;
 
-public class DownloadRequestor
+public class UmDownloadRequestor
 {
   private Timer timerObj = null; //!< The timer of cancelling download when no progress for a long time.
   private String actionName; //!< Construct action name.
@@ -96,7 +96,7 @@ public class DownloadRequestor
   public Future<File> fileDownloadFuture; //!<The file download future.
   private NotificationManager mNM;
 
-  private static final String TAG="DownloadRequestor"; //!<输出调试信息了时使用的标记
+  private static final String TAG="UmDownloadRequestor"; //!< 输出调试信息了时使用的标记
 
   private long downloadId; //!<当前的下载编号
 
@@ -151,18 +151,14 @@ public class DownloadRequestor
     baseApplication.startActivity(intent);
   } //private void requestInstall(String downloadFilePath)
 
-  public DownloadRequestor(Context context)
+  public UmDownloadRequestor(Context context)
   {
     baseApplication = context; //获取应用程序对象。
     
     actionName="com.stupidbeauty.upgrademanager."+ baseApplication.getPackageName(); // Construct action name.
     
     mNM = (NotificationManager)baseApplication.getSystemService(Context.NOTIFICATION_SERVICE); // Get notification manager.
-
-    DownloadManager.Query q=new DownloadManager.Query(); // 构造查询对象。
-      
-    final DownloadManager downloadManager = (DownloadManager)baseApplication.getSystemService(Context.DOWNLOAD_SERVICE); // 获取下载管理器对象。
-  }
+  } // public UmDownloadRequestor(Context context)
 
   /**
   * Report download finished.
@@ -280,6 +276,8 @@ public class DownloadRequestor
         @Override
         public void onCompleted(Exception e, File file) 
         {
+          timerObj.cancel(); // Cancel the timer of cancel.
+          
           // download done...
           // do stuff with the File or error
 
@@ -353,6 +351,7 @@ public class DownloadRequestor
         uiHandler.post(runnable);
       }
     };
+    Log.d(TAG, "startTimeoutCancelTimer, 358, scheduling"); // Debug.
     timerObj.schedule(timerTaskObj, 60*1000); // 延时启动。
   } // private void startTimeoutCancelTimer()
   

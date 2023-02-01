@@ -112,17 +112,18 @@ public class UmLoadVoicePackageUrlMapTask extends AsyncTask<Object, Void, Object
   {
     File photoFile=new File(filePath); // The data file.
 
-    try
-    {
-      byte[] photoBytes= FileUtils.readFileToByteArray(photoFile); //将照片文件内容全部读取。
-
-      voicePackageUrlMap=new HashMap<>(); //创建映射。
+          voicePackageUrlMap=new HashMap<>(); //创建映射。
       packageNameUrlMap=new HashMap<>(); //创建映射
       packageNameInstallerTypeMap=new HashMap<>(); // Create map of installer type.
       packageNameInformationUrlMap=new HashMap<>(); // 创建映射。
       packageNameExtraPackageNamesMap=new HashMap<>(); // Create map.
       packageNameVersionNameMap=new HashMap<>(); // 创建映射。陈欣
       packageNameApplicationNameMap=new HashMap<>(); //创建映射
+
+    try
+    {
+      byte[] photoBytes= FileUtils.readFileToByteArray(photoFile); //将照片文件内容全部读取。
+
 
       CBORObject videoStreamMessage= CBORObject.DecodeFromBytes(photoBytes); //解析消息。
 

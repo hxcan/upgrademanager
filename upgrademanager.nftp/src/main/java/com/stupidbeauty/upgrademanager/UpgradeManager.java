@@ -55,7 +55,7 @@ public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePack
   private boolean checkingUpgrade=false; //!< if we are already checking for upgrade.
   private int checkCounter=0; //!< Check counter.
   private HashMap<String, String> packageNameInformationUrlMap; //!< 包名与信息页面地址之间的映射关系。
-  private final DownloadRequestor downloadRequestor ; //!< Download requestor. For download url package map file.
+  private final UmDownloadRequestor downloadRequestor ; //!< Download requestor. For download url package map file.
   private int recognizeCounter=0; //!<识别计数器．
   private ErrorListener errorListener=null; //!< Error listener.
   private int port=1421; //!< Port.
@@ -198,9 +198,14 @@ public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePack
 	 */
 	public String getAvailableVersionName(String packageName)
 	{
-      String result= packageNameVersionNameMap.get(packageName); // 获取可用 版本号名字。
-
-      return result;
+    String result= ""; // 获取可用 版本号名字。
+      
+    if (packageNameVersionNameMap!=null) // The map exists
+    {
+      result= packageNameVersionNameMap.get(packageName); // 获取可用 版本号名字。
+    } // if (packageNameVersionNameMap!=null) // The map exists
+      
+    return result;
 	} //public String getAvailableVersionName(String packageName)
 	
   /**
@@ -317,7 +322,7 @@ public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePack
         
   public UpgradeManager(Context context) 
   {
-    downloadRequestor = new DownloadRequestor(context); // Download requestor. For download url package map file.
+    downloadRequestor = new UmDownloadRequestor(context); // Download requestor. For download url package map file.
 
     this.context = context;
   } // public UpgradeManager(Context context) 
