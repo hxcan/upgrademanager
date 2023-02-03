@@ -70,6 +70,7 @@ public class UmLoadVoicePackageUrlMapTask extends AsyncTask<Object, Void, Object
   private HashMap<String, List<String> > packageNameExtraPackageNamesMap; //!< The map of package name to extra package names.
   private HashMap<String, String> packageNameVersionNameMap; //!< 包名与可用版本号之间的映射关系。
   private  HashMap<String, String > packageNameApplicationNameMap; //!<包名与应用程序名的映射
+  private HashMap<String, String> packageNameIconUrlMap; //!< The map of package name and icon url.
 
   private LoadVoicePackageUrlMapInterface launcherActivity=null; //!< 启动活动。
   
@@ -117,6 +118,7 @@ public class UmLoadVoicePackageUrlMapTask extends AsyncTask<Object, Void, Object
     packageNameExtraPackageNamesMap=new HashMap<>(); // Create map.
     packageNameVersionNameMap=new HashMap<>(); // 创建映射。陈欣
     packageNameApplicationNameMap=new HashMap<>(); //创建映射
+    packageNameIconUrlMap=new HashMap<>(); //创建映射. package name to icon url.
 
     try
     {
@@ -133,6 +135,7 @@ public class UmLoadVoicePackageUrlMapTask extends AsyncTask<Object, Void, Object
         String installerType=currentSubFile.get("installerType").AsString(); // Get installer type. xapk or apk
         String packageName=currentSubFile.get("packageName").AsString();
         String informationUrl=currentSubFile.get("informationUrl").AsString(); // 获取信息页面地址。
+        String iconUrl=currentSubFile.get("iconUrl").AsString(); // Get package icon url.
 
         ArrayList<String> extraPackageNames = new ArrayList<>();
 
@@ -172,6 +175,7 @@ public class UmLoadVoicePackageUrlMapTask extends AsyncTask<Object, Void, Object
         packageNameApplicationNameMap.put( packageName, voiceCommand); //加入映射，包名与应用程序名的映射
         packageNameInformationUrlMap.put(packageName, informationUrl); // 加入映射，包名与信息页面地址的映射。
         packageNameExtraPackageNamesMap.put(packageName, extraPackageNames); // Add map, package name to extram package names list.
+        packageNameIconUrlMap.put(packageName, iconUrl); // Add map item.
       } //for (FileMessageContainer.FileMessage currentSubFile:videoStreamMessage.getSubFilesList()) //一个个子文件地比较其
     }
     catch (IOException e)
@@ -226,5 +230,6 @@ public class UmLoadVoicePackageUrlMapTask extends AsyncTask<Object, Void, Object
     launcherActivity.setPackageNameInformationUrlMap(packageNameInformationUrlMap); // 设置包名与信息页面地址之间的映射。
     launcherActivity.setPackageNameExtraPackageNamesMap(packageNameExtraPackageNamesMap); // Set the map of package name to extra package names list.
     launcherActivity.setPackageNameApplicationNameMap(packageNameApplicationNameMap); // Set map of package name to application name.
+    launcherActivity.setPackageNameIconUrlMap(packageNameIconUrlMap); // Set the map of package name and icon url.
   } //protected void onPostExecute(Boolean result)
 }
