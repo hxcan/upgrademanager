@@ -94,11 +94,9 @@ public class UmLoadVoicePackageUrlMapTask extends AsyncTask<Object, Void, Object
     
     File downloadFolder = baseApplication.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
 
-
     final String wholePath =downloadFolder.getPath()+ File.separator  + "voicePackageUrlMap.cbor.cx";
     
     Log.d(TAG, "exuzDataFile, whole path: "+ wholePath); // Debug.
-    
 
     result=wholePath;
     
@@ -112,18 +110,17 @@ public class UmLoadVoicePackageUrlMapTask extends AsyncTask<Object, Void, Object
   {
     File photoFile=new File(filePath); // The data file.
 
-          voicePackageUrlMap=new HashMap<>(); //创建映射。
-      packageNameUrlMap=new HashMap<>(); //创建映射
-      packageNameInstallerTypeMap=new HashMap<>(); // Create map of installer type.
-      packageNameInformationUrlMap=new HashMap<>(); // 创建映射。
-      packageNameExtraPackageNamesMap=new HashMap<>(); // Create map.
-      packageNameVersionNameMap=new HashMap<>(); // 创建映射。陈欣
-      packageNameApplicationNameMap=new HashMap<>(); //创建映射
+    voicePackageUrlMap=new HashMap<>(); //创建映射。
+    packageNameUrlMap=new HashMap<>(); //创建映射
+    packageNameInstallerTypeMap=new HashMap<>(); // Create map of installer type.
+    packageNameInformationUrlMap=new HashMap<>(); // 创建映射。
+    packageNameExtraPackageNamesMap=new HashMap<>(); // Create map.
+    packageNameVersionNameMap=new HashMap<>(); // 创建映射。陈欣
+    packageNameApplicationNameMap=new HashMap<>(); //创建映射
 
     try
     {
       byte[] photoBytes= FileUtils.readFileToByteArray(photoFile); //将照片文件内容全部读取。
-
 
       CBORObject videoStreamMessage= CBORObject.DecodeFromBytes(photoBytes); //解析消息。
 
@@ -228,5 +225,6 @@ public class UmLoadVoicePackageUrlMapTask extends AsyncTask<Object, Void, Object
     launcherActivity.setPackageNameVersionNameMap(packageNameVersionNameMap);
     launcherActivity.setPackageNameInformationUrlMap(packageNameInformationUrlMap); // 设置包名与信息页面地址之间的映射。
     launcherActivity.setPackageNameExtraPackageNamesMap(packageNameExtraPackageNamesMap); // Set the map of package name to extra package names list.
+    launcherActivity.setPackageNameApplicationNameMap(packageNameApplicationNameMap); // Set map of package name to application name.
   } //protected void onPostExecute(Boolean result)
 }

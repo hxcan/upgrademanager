@@ -22,4 +22,5 @@ public interface PackageNameUrlMapDataListener
   public void setPackageNameExtraPackageNamesMap(HashMap<String, List<String> > packageNameExtraPackageNamesMap); //!< Set the map of package name to extra package names list.
   public void setPackageNameInformationUrlMap(HashMap<String, String> packageNameInformationUrlMap);
   public void setPackageNameVersionNameMap (HashMap<String, String> packageNameVersionNameMap);
+	public void setPackageNameApplicationNameMap (HashMap<String, String > packageNameApplicationNameMap); //!< Set the map of package name to application name.
 }

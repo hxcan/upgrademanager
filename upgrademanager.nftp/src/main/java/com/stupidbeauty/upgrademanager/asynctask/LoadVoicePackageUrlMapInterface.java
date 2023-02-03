@@ -19,4 +19,5 @@ public interface LoadVoicePackageUrlMapInterface
   void setPackageNameInformationUrlMap(HashMap<String, String> packageNameInformationUrlMap); //!< set the map of package name and informatino url.
   void setPackageNameVersionNameMap (HashMap<String, String> packageNameVersionNameMap); //!< 包名与可用版本号之间的映射关系。
   void setPackageNameExtraPackageNamesMap(HashMap<String, List<String> > packageNameExtraPackageNamesMap); //!< Set the map of package name to extra package names list.
+	void setPackageNameApplicationNameMap (HashMap<String, String > packageNameApplicationNameMap); //!< Set the map of package name to application name.
 } // public interface LoadVoicePackageUrlMapInterface

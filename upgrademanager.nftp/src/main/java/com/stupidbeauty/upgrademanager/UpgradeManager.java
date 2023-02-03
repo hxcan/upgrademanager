@@ -68,6 +68,7 @@ public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePack
   private HashMap<String, String> packageNameUrlMap; //!< 包名与下载地址之间的映射关系。
 	private HashMap<String, String> voicePackageUrlMap; //!<语音识别结果与包名之间的映射关系。
   private HashMap<String, String> packageNameInstallerTypeMap; //!< Map of package name to installer type.
+  private HashMap<String, String> packageNameApplicationNameMap; //!< Map of package name to application name.
   private HashMap<String, List<String> > packageNameExtraPackageNamesMap; //!< Map of packge name to extra package names.
   private PackageNameUrlMapDataListener packageNameUrlMapDataListener; //!< Package name url map data listener.
 
@@ -152,6 +153,19 @@ public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePack
       packageNameUrlMapDataListener.setPackageNameInstallerTypeMap(packageNameInstallerTypeMap);
     } // if (packageNameUrlMapDataListener!=null) // There is a listener.
   } // public void setPackageNameInstallerTypeMap(HashMap<String, String> packageNameInstallerTypeMap)
+  
+	/**
+	* Set 包名与应用程序名的映射 
+	*/
+	public void setPackageNameApplicationNameMap (HashMap<String, String > packageNameApplicationNameMap)
+	{
+    this.packageNameApplicationNameMap=packageNameApplicationNameMap;
+
+    if (packageNameUrlMapDataListener!=null) // There is a listener.
+    {
+      packageNameUrlMapDataListener.setPackageNameApplicationNameMap(packageNameApplicationNameMap);
+    } // if (packageNameUrlMapDataListener!=null) // There is a listener.
+	} //public void setPackageNameApplicationNameMap (HashMap<String, String > packageNameApplicationNameMap)
   
   private HashMap<String, String> packageNameVersionNameMap; //!< 包名与可用版本号之间的映射关系。
   
