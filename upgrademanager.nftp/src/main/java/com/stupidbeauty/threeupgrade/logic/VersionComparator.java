@@ -55,9 +55,12 @@ public class VersionComparator
   {
     boolean result=false;
 
-    currentVersionName=currentVersionName.replaceAll("V", "");
-    currentVersionName=currentVersionName.replaceAll("v", "");
-    currentVersionName=currentVersionName.replaceAll(" ", "");
+    if (currentVersionName!=null) // Current version exists
+    {
+      currentVersionName=currentVersionName.replaceAll("V", "");
+      currentVersionName=currentVersionName.replaceAll("v", "");
+      currentVersionName=currentVersionName.replaceAll(" ", "");
+    } // if (currentVersionName!=null) // Current version exists
     
     if (availableVersonName!=null)
     {
