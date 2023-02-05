@@ -325,6 +325,12 @@ public class UmDownloadRequestor
   private void startTimeoutCancelTimer() 
   {
     //    chen xin.
+    
+    if (timerObj!=null) // The timer exists
+    {
+      timerObj.cancel(); // Cancel the timer.
+      timerObj=null; // Delete it.
+    } // if (timerObj!=null) // The timer exists
 
     timerObj = new Timer();
     TimerTask timerTaskObj = new TimerTask() 
