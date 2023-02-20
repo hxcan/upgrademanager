@@ -1,6 +1,6 @@
-package com.stupidbeauty.threeupgrade.logic;
+package com.stupidbeauty.upgrademanager.logic;
 
-import com.stupidbeauty.threeupgrade.logic.VersionComparator;
+// import com.stupidbeauty.threeupgrade.logic.VersionComparator;
 import io.github.g00fy2.versioncompare.Version;
 import android.content.Intent;
 import android.content.IntentFilter;
