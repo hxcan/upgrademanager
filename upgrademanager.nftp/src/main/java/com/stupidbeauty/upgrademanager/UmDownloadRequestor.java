@@ -265,7 +265,7 @@ public class UmDownloadRequestor
         @Override
         public void onProgress(long downloaded, long total) 
         {
-          timerObj.cancel(); // Cancel the timer of cancel.
+//           timerObj.cancel(); // Cancel the timer of cancel.
           startTimeoutCancelTimer(); // Start time out cancel timer.
           Log.d(TAG, "downloadByIon, 274, progress: " + downloaded + "/" + total + ", " + targetUrl); // 报告进度。
         }
@@ -276,7 +276,8 @@ public class UmDownloadRequestor
         @Override
         public void onCompleted(Exception e, File file) 
         {
-          timerObj.cancel(); // Cancel the timer of cancel.
+//           timerObj.cancel(); // Cancel the timer of cancel.
+          cancelCancelTimer(); // Cancel the cancel timer.
           
           // download done...
           // do stuff with the File or error
@@ -319,18 +320,25 @@ public class UmDownloadRequestor
       startTimeoutCancelTimer(); // Start time out cancel timer.
     } //private void downloadByIon(Uri uri)
     
+    /**
+    * Cancel the cancel timer.
+    */
+    private void cancelCancelTimer()
+    {
+      if (timerObj!=null) // The timer exists
+      {
+        timerObj.cancel(); // Cancel the timer.
+        timerObj=null; // Delete it.
+      } // if (timerObj!=null) // The timer exists
+    } // private void cancelCancelTimer()
+    
   /**
   * Start time out cancel timer.
   */
   private void startTimeoutCancelTimer() 
   {
     //    chen xin.
-    
-    if (timerObj!=null) // The timer exists
-    {
-      timerObj.cancel(); // Cancel the timer.
-      timerObj=null; // Delete it.
-    } // if (timerObj!=null) // The timer exists
+    cancelCancelTimer(); // Cancel the cancel timer.
 
     timerObj = new Timer();
     TimerTask timerTaskObj = new TimerTask() 
