@@ -43,9 +43,7 @@ import java.util.ArrayList;
 
 public class VersionComparator
 {
-  private HashMap<String, Integer> packageNamePositionMap=new HashMap<>(); //!< 包名字符串与图标位置之间的映射。
   private HashMap<String, Integer> packageNameItemNamePositionMap=new HashMap<>(); //!< 包名加类名的字符串与图标位置之间的映射。
-
   private static final String TAG="VersionComparator"; //!< 输出调试信息时使用的标记。
 	
   /**
@@ -57,16 +55,22 @@ public class VersionComparator
 
     if (currentVersionName!=null) // Current version exists
     {
-      currentVersionName=currentVersionName.replaceAll("V", "");
-      currentVersionName=currentVersionName.replaceAll("v", "");
-      currentVersionName=currentVersionName.replaceAll(" ", "");
+//         regexp: [a-zA-Z]|\s
+      currentVersionName=currentVersionName.replaceAll("[a-zA-Z]|\\s", "");
+
+      
+//       currentVersionName=currentVersionName.replaceAll("V", "");
+//       currentVersionName=currentVersionName.replaceAll("v", "");
+//       currentVersionName=currentVersionName.replaceAll(" ", "");
     } // if (currentVersionName!=null) // Current version exists
     
     if (availableVersonName!=null)
     {
-      availableVersonName=availableVersonName.replaceAll("V", "");
-      availableVersonName=availableVersonName.replaceAll("v", "");
-      availableVersonName=availableVersonName.replaceAll(" ", "");
+      availableVersonName=availableVersonName.replaceAll("[a-zA-Z]|\\s", "");
+
+//       availableVersonName=availableVersonName.replaceAll("V", "");
+//       availableVersonName=availableVersonName.replaceAll("v", "");
+//       availableVersonName=availableVersonName.replaceAll(" ", "");
     } // availableVersonName
 
     Version availableVersion= new Version(availableVersonName); // 已有版本对象。
