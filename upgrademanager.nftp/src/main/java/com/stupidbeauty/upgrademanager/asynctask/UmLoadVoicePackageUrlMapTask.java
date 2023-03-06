@@ -122,7 +122,7 @@ public class UmLoadVoicePackageUrlMapTask extends AsyncTask<Object, Void, Object
 
     try
     {
-      byte[] photoBytes= FileUtils.readFileToByteArray(photoFile); //将照片文件内容全部读取。
+      byte[] photoBytes= FileUtils.readFileToByteArray(photoFile); // 将 data 文件内容全部读取。
 
       CBORObject videoStreamMessage= CBORObject.DecodeFromBytes(photoBytes); //解析消息。
 
