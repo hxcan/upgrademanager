@@ -141,12 +141,22 @@ public class UmLoadVoicePackageUrlMapTask extends AsyncTask<Object, Void, Object
 
         Collection<CBORObject> extraPackageNamesList=currentSubFile.get("extraPackageNames").getValues();
         
-        for(CBORObject extraPackgaeName: extraPackageNamesList)
+        if (extraPackageNamesList.size() > 0) // There is extra package names list
         {
-          String extraPackageNameString = extraPackgaeName.AsString();
-          
-          extraPackageNames.add(extraPackageNameString);
-        } // for(CBORObject extraPackgaeName: extraPackageNamesList)
+          extraPackageNames.add(packageName); // Add the package name itself.
+
+          for(CBORObject extraPackgaeName: extraPackageNamesList)
+          {
+            String extraPackageNameString = extraPackgaeName.AsString();
+            
+            extraPackageNames.add(extraPackageNameString);
+          } // for(CBORObject extraPackgaeName: extraPackageNamesList)
+
+          for(String currentPackgaeName: extraPackageNames) // Add to map one by one
+          {
+            packageNameExtraPackageNamesMap.put(currentPackgaeName, extraPackageNames); // Add map, package name to extram package names list.
+          } // for(String currentPackgaeName: extraPackageNames) // Add to map one by one
+        } // if (extraPackageNamesList.size() > 0) // There is extra package names list
               
         CBORObject versionNameObject=currentSubFile.get("versionName");
 
@@ -174,7 +184,6 @@ public class UmLoadVoicePackageUrlMapTask extends AsyncTask<Object, Void, Object
         packageNameInstallerTypeMap.put(packageName, installerType); // 加入映射。 installer type.
         packageNameApplicationNameMap.put( packageName, voiceCommand); //加入映射，包名与应用程序名的映射
         packageNameInformationUrlMap.put(packageName, informationUrl); // 加入映射，包名与信息页面地址的映射。
-        packageNameExtraPackageNamesMap.put(packageName, extraPackageNames); // Add map, package name to extram package names list.
         packageNameIconUrlMap.put(packageName, iconUrl); // Add map item.
       } //for (FileMessageContainer.FileMessage currentSubFile:videoStreamMessage.getSubFilesList()) //一个个子文件地比较其
     }
