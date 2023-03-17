@@ -185,26 +185,21 @@ public class UmLoadVoicePackageUrlMapTask extends AsyncTask<Object, Void, Object
         packageNameApplicationNameMap.put( packageName, voiceCommand); //加入映射，包名与应用程序名的映射
         packageNameInformationUrlMap.put(packageName, informationUrl); // 加入映射，包名与信息页面地址的映射。
         packageNameIconUrlMap.put(packageName, iconUrl); // Add map item.
+        
+        for(String currentPackgaeName: extraPackageNames) // Add to map one by one
+        {
+//           packageNameExtraPackageNamesMap.put(currentPackgaeName, extraPackageNames); // Add map, package name to extram package names list.
+          packageNameUrlMap.put(currentPackgaeName, packageUrl); // 加入映射。
+        } // for(String currentPackgaeName: extraPackageNames) // Add to map one by one
       } //for (FileMessageContainer.FileMessage currentSubFile:videoStreamMessage.getSubFilesList()) //一个个子文件地比较其
-    }
+    } // try
     catch (IOException e)
     {
-//       e.printStackTrace();
-      
       Log.d(TAG, "loadVoicePackageUrlMapCbor, 183, exz data file partly downloaded, ignoring: "+ exzFilePath); //Debug.
-//       File exzDataFile=new File(exzFilePath); // The exz data file object.
-      
-//       exzDataFile.delete(); // Delete the exz data file.
     } //catch (IOException e)
     catch (CBORException e)
     {
-//       e.printStackTrace();
-
       Log.d(TAG, "loadVoicePackageUrlMapCbor, 192, exz data file partly downloaded, ignoring: "+ exzFilePath); //Debug.
-
-//       File exzDataFile=new File(exzFilePath); // The exz data file object.
-      
-//       exzDataFile.delete(); // Delete the exz data file.
     } // catch (CBORException e)
   } //private void  loadVoicePackageUrlMapCbor()
 	
