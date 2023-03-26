@@ -94,7 +94,7 @@ public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePack
       packageNameUrlMapDataListener.setPackageNameExtraPackageNamesMap(packageNameExtraPackageNamesMap);
     } // if (packageNameUrlMapDataListener!=null) // Listenre exists.
     
-    if (packageNameExtraPackageNamesMap.size()==0) // Empty map
+    if  ((packageNameExtraPackageNamesMap==null) || (packageNameExtraPackageNamesMap.size()==0)) // Empty map
     {
       checkUpgrade(); // Check pugrade again.
     } // if (packageNameExtraPackageNamesMap.size()==0) // Empty map
