@@ -55,7 +55,7 @@ import com.stupidbeauty.extremezip.EXtremeZip;
 public class VoicePackageUrlMapLoader
 {
   private static final String TAG="VoicePackageUrlMapLoader"; //!< 输出调试信息时使用的标记。
-  private String filePath; //!< file path.
+//   private String filePath; //!< file path.
   private String exzFilePath; //!< exz data file path.
   private HashMap<String, String> voicePackageUrlMap; //!<语音识别结果与包名之间的映射关系。
   private VoicePackageUrlMapLoader voicePackageUrlMapLoader=null; //!< voice package url map loader.
@@ -80,7 +80,7 @@ public class VoicePackageUrlMapLoader
   */
   public void loadVoicePackageUrlMapCbor(byte[] photoBytes)
   {
-    File photoFile=new File(filePath); // The data file.
+//     File photoFile=new File(filePath); // The data file.
 
     voicePackageUrlMap=new HashMap<>(); //创建映射。
     packageNameUrlMap=new HashMap<>(); //创建映射
