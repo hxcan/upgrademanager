@@ -1,4 +1,4 @@
-package com.stupidbeauty.upgrademanager.asynctask;
+package com.stupidbeauty.upgrademanager.loader;
 
 import android.content.Context;
 import android.content.Intent;
@@ -40,7 +40,7 @@ import java.util.HashMap;
 import android.view.View;
 import android.os.AsyncTask;
 import java.util.HashMap;
-// import com.stupidbeauty.hxlauncher.bean.ApplicationNamePair;
+import com.stupidbeauty.upgrademanager.asynctask.LoadVoicePackageUrlMapInterface;
 import java.util.List;
 import android.content.pm.PackageItemInfo;
 import android.content.pm.PackageManager;
@@ -52,9 +52,9 @@ import com.stupidbeauty.upgrademanager.bean.FieldCode;
 import com.stupidbeauty.extremezip.EXtremeZip;
 // import com.stupidbeauty.hxlauncher.datastore.RuntimeInformationStore;
 
-public class UmLoadVoicePackageUrlMapTask extends AsyncTask<Object, Void, Object>
+public class VoicePackageUrlMapLoader
 {
-  private static final String TAG="UmLoadVoicePackageUrlMapTask"; //!< 输出调试信息时使用的标记。
+  private static final String TAG="VoicePackageUrlMapLoader"; //!< 输出调试信息时使用的标记。
   private String filePath; //!< file path.
   private String exzFilePath; //!< exz data file path.
   private HashMap<String, String> voicePackageUrlMap; //!<语音识别结果与包名之间的映射关系。
@@ -73,66 +73,12 @@ public class UmLoadVoicePackageUrlMapTask extends AsyncTask<Object, Void, Object
   private  HashMap<String, String > packageNameApplicationNameMap; //!<包名与应用程序名的映射
   private HashMap<String, String> packageNameIconUrlMap; //!< The map of package name and icon url.
 
-  private LoadVoicePackageUrlMapInterface launcherActivity=null; //!< 启动活动。
+//   private LoadVoicePackageUrlMapInterface launcherActivity=null; //!< 启动活动。
   
-  /**
-  * uncompress the compressed data file.
-  */
-  private String exuzDataFile(String filePath) 
-  {
-    String result;
-    
-    EXtremeZip extremezip=new EXtremeZip(); // Create extremezip object.
-
-    Context baseApplication=launcherActivity.getContext(); // Get the context.
-
-    try
-    {
-      extremezip.exuz(filePath, baseApplication); // Compress.
-    }
-    catch(ClassCastException e)
-    {
-    }
-    
-    File downloadFolder = baseApplication.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
-
-    final String wholePath =downloadFolder.getPath()+ File.separator  + "voicePackageUrlMap.cbor.cx";
-    
-    Log.d(TAG, "exuzDataFile, whole path: "+ wholePath); // Debug.
-
-    result=wholePath;
-    
-    return result;
-  } // private String exuzDataFile(String filePath)
-  
-  /**
-  * 载入语音识别结果与下载网址之间的映射。使用CBOR。陈欣。 Use the loader
-  */
-  private void loadVoicePackageUrlMapCborLoader() 
-  {
-    voicePackageUrlMapLoader=new VoicePackageUrlMapLoader(); // Create the loader.
-    File photoFile=new File(filePath); // The data file.
-
-    try
-    {
-      byte[] photoBytes= FileUtils.readFileToByteArray(photoFile); // 将 data 文件内容全部读取。
-      
-      voicePackageUrlMapLoader.loadVoicePackageUrlMapCbor(photoBytes); // Load content.
-    } // try
-    catch (IOException e)
-    {
-      Log.d(TAG, "loadVoicePackageUrlMapCbor, 183, exz data file partly downloaded, ignoring: "+ exzFilePath); //Debug.
-    } //catch (IOException e)
-    catch (CBORException e)
-    {
-      Log.d(TAG, "loadVoicePackageUrlMapCbor, 192, exz data file partly downloaded, ignoring: "+ exzFilePath); //Debug.
-    } // catch (CBORException e)
-  } // private void loadVoicePackageUrlMapCborLoader()
-
   /**
   * 载入语音识别结果与下载网址之间的映射。使用CBOR。陈欣。
   */
-  private void  loadVoicePackageUrlMapCbor()
+  public void loadVoicePackageUrlMapCbor(byte[] photoBytes)
   {
     File photoFile=new File(filePath); // The data file.
 
@@ -147,7 +93,7 @@ public class UmLoadVoicePackageUrlMapTask extends AsyncTask<Object, Void, Object
 
     try
     {
-      byte[] photoBytes= FileUtils.readFileToByteArray(photoFile); // 将 data 文件内容全部读取。
+//       byte[] photoBytes= FileUtils.readFileToByteArray(photoFile); // 将 data 文件内容全部读取。
 
       CBORObject videoStreamMessage= CBORObject.DecodeFromBytes(photoBytes); //解析消息。
 
@@ -218,51 +164,16 @@ public class UmLoadVoicePackageUrlMapTask extends AsyncTask<Object, Void, Object
         } // for(String currentPackgaeName: extraPackageNames) // Add to map one by one
       } //for (FileMessageContainer.FileMessage currentSubFile:videoStreamMessage.getSubFilesList()) //一个个子文件地比较其
     } // try
-    catch (IOException e)
-    {
-      Log.d(TAG, "loadVoicePackageUrlMapCbor, 183, exz data file partly downloaded, ignoring: "+ exzFilePath); //Debug.
-    } //catch (IOException e)
     catch (CBORException e)
     {
       Log.d(TAG, "loadVoicePackageUrlMapCbor, 192, exz data file partly downloaded, ignoring: "+ exzFilePath); //Debug.
     } // catch (CBORException e)
   } //private void  loadVoicePackageUrlMapCbor()
 	
-  @Override
-  protected Object doInBackground(Object... params)
-  {
-    Boolean result=false; //结果，是否成功。
-
-    launcherActivity=(LoadVoicePackageUrlMapInterface)(params[0]); // 获取映射对象
-    exzFilePath=(String)(params[1]); // file path. compressed.
-    
-    filePath=exuzDataFile(exzFilePath); // uncompress the compressed data file.
-            
-//     loadVoicePackageUrlMapCbor(); // 载入语音识别结果与下载网址之间的映射。使用CBOR。陈欣。
-    loadVoicePackageUrlMapCborLoader(); // 载入语音识别结果与下载网址之间的映射。使用CBOR。陈欣。 Use the loader
-            
-    boolean addPhotoFile=false; //Whether to add photo file
-
-    return voicePackageUrlMap;
-  } //protected Object doInBackground(Object... params)
-
-  /**
-  * 报告结果。
-  * @param result 结果。是否成功。
-  */
-  @Override
-  protected void onPostExecute(Object result)
-  {
-    voicePackageUrlMapLoader.transferData(launcherActivity);
-    
-//     transferData(); // Transfer data.
-  
-  } //protected void onPostExecute(Boolean result)
-  
   /**
   * Transfer data.
   */
-  private void transferData() 
+  public void transferData(LoadVoicePackageUrlMapInterface launcherActivity)
   {
     launcherActivity.setVoicePackageUrlMap(voicePackageUrlMap);
     launcherActivity.setPackageNameUrlMap(packageNameUrlMap);
