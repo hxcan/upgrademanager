@@ -51,6 +51,7 @@ import com.stupidbeauty.upgrademanager.asynctask.LoadVoicePackageUrlMapInterface
 
 public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePackageUrlMapInterface
 {
+  private long lastLoadDataTime=0; //!< Remember load time stamp. Avoid loading corrupt cache files too frequently.
   private long checkingStartTime=0; //!< 记录开始时间戳。
   private boolean checkingUpgrade=false; //!< if we are already checking for upgrade.
   private int checkCounter=0; //!< Check counter.
@@ -303,9 +304,16 @@ public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePack
   */
   private void loadVoicePackageUrlMap(String filePath)
   {
-    UmLoadVoicePackageUrlMapTask translateRequestSendTask =new UmLoadVoicePackageUrlMapTask(); // 创建异步任务。
+    long currentTimeMillis=System.currentTimeMillis(); // Get the curent time stamp.
+    
+    if ((currentTimeMillis-lastLoadDataTime) >= 19*1000) // Only load once in every 19 seconds
+    {
+      UmLoadVoicePackageUrlMapTask translateRequestSendTask =new UmLoadVoicePackageUrlMapTask(); // 创建异步任务。
 
-    translateRequestSendTask.execute(this, filePath); //执行任务。
+      translateRequestSendTask.execute(this, filePath); //执行任务。
+      
+      lastLoadDataTime=currentTimeMillis; // Remember load time stamp.
+    } // if ((currentTimeMillis-lastLoadDataTime) >= 19*1000) // Only load once in every 19 seconds
   } //private void loadVoicePackageUrlMap()
 
   /**
