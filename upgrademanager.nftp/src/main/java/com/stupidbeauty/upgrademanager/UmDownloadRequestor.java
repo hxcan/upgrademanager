@@ -270,8 +270,10 @@ public class UmDownloadRequestor
           Log.d(TAG, "downloadByIon, 274, progress: " + downloaded + "/" + total + ", " + targetUrl); // 报告进度。
         }
       })
-      .setLogging(TAG, Log.DEBUG).write(new File( wholePath))
-      .setCallback(new FutureCallback<File>() 
+      .setLogging(TAG, Log.DEBUG).write(new File( wholePath));
+      
+      
+      fileDownloadFuture.setCallback(new FutureCallback<File>() 
       {
         @Override
         public void onCompleted(Exception e, File file) 
