@@ -1,5 +1,9 @@
 package com.stupidbeauty.upgrademanager.loader;
 
+import com.stupidbeauty.codeposition.CodePosition;
+import java.io.FileDescriptor;
+import java.io.FileInputStream;
+import java.io.BufferedReader;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -175,13 +179,20 @@ public class VoicePackageUrlMapLoader
   */
   public void transferData(LoadVoicePackageUrlMapInterface launcherActivity)
   {
-    launcherActivity.setVoicePackageUrlMap(voicePackageUrlMap);
-    launcherActivity.setPackageNameUrlMap(packageNameUrlMap);
-    launcherActivity.setPackageNameInstallerTypeMap(packageNameInstallerTypeMap); // Set package name installer type map.
-    launcherActivity.setPackageNameVersionNameMap(packageNameVersionNameMap);
-    launcherActivity.setPackageNameInformationUrlMap(packageNameInformationUrlMap); // 设置包名与信息页面地址之间的映射。
-    launcherActivity.setPackageNameExtraPackageNamesMap(packageNameExtraPackageNamesMap); // Set the map of package name to extra package names list.
-    launcherActivity.setPackageNameApplicationNameMap(packageNameApplicationNameMap); // Set map of package name to application name.
-    launcherActivity.setPackageNameIconUrlMap(packageNameIconUrlMap); // Set the map of package name and icon url.
+    if (packageNameVersionNameMap!=null) // Actually loaded data
+    {
+      launcherActivity.setVoicePackageUrlMap(voicePackageUrlMap);
+      launcherActivity.setPackageNameUrlMap(packageNameUrlMap);
+      launcherActivity.setPackageNameInstallerTypeMap(packageNameInstallerTypeMap); // Set package name installer type map.
+      launcherActivity.setPackageNameVersionNameMap(packageNameVersionNameMap);
+      launcherActivity.setPackageNameInformationUrlMap(packageNameInformationUrlMap); // 设置包名与信息页面地址之间的映射。
+      launcherActivity.setPackageNameExtraPackageNamesMap(packageNameExtraPackageNamesMap); // Set the map of package name to extra package names list.
+      launcherActivity.setPackageNameApplicationNameMap(packageNameApplicationNameMap); // Set map of package name to application name.
+      launcherActivity.setPackageNameIconUrlMap(packageNameIconUrlMap); // Set the map of package name and icon url.
+    } // if (packageNameVersionNameMap!=null) // Actually loaded data
+    else // Not loaded data
+    {
+      Log.d(TAG, CodePosition.newInstance().toString()+ ", no data loaded, skip"); // Debug.
+    } // else // Not loaded data
   } // private void transferData()
 }
