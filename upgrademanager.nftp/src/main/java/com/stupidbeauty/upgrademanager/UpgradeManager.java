@@ -179,6 +179,8 @@ public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePack
     if (packageNameUrlMapDataListener!=null) // There is a listener.
     {
       packageNameUrlMapDataListener.setPackageNameApplicationNameMap(packageNameApplicationNameMap);
+
+      lastLoadDataTime=currentTimeMillis; // Remember load time stamp.
     } // if (packageNameUrlMapDataListener!=null) // There is a listener.
 	} //public void setPackageNameApplicationNameMap (HashMap<String, String > packageNameApplicationNameMap)
   
@@ -312,7 +314,7 @@ public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePack
 
       translateRequestSendTask.execute(this, filePath); //执行任务。
       
-      lastLoadDataTime=currentTimeMillis; // Remember load time stamp.
+      // lastLoadDataTime=currentTimeMillis; // Remember load time stamp.
     } // if ((currentTimeMillis-lastLoadDataTime) >= 19*1000) // Only load once in every 19 seconds
   } //private void loadVoicePackageUrlMap()
 

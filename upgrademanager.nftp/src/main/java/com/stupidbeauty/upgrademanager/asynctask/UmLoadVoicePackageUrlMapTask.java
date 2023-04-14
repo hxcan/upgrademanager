@@ -165,19 +165,4 @@ public class UmLoadVoicePackageUrlMapTask extends AsyncTask<Object, Void, Object
 //     transferData(); // Transfer data.
   
   } //protected void onPostExecute(Boolean result)
-  
-  /**
-  * Transfer data.
-  */
-  private void transferData() 
-  {
-    launcherActivity.setVoicePackageUrlMap(voicePackageUrlMap);
-    launcherActivity.setPackageNameUrlMap(packageNameUrlMap);
-    launcherActivity.setPackageNameInstallerTypeMap(packageNameInstallerTypeMap); // Set package name installer type map.
-    launcherActivity.setPackageNameVersionNameMap(packageNameVersionNameMap);
-    launcherActivity.setPackageNameInformationUrlMap(packageNameInformationUrlMap); // 设置包名与信息页面地址之间的映射。
-    launcherActivity.setPackageNameExtraPackageNamesMap(packageNameExtraPackageNamesMap); // Set the map of package name to extra package names list.
-    launcherActivity.setPackageNameApplicationNameMap(packageNameApplicationNameMap); // Set map of package name to application name.
-    launcherActivity.setPackageNameIconUrlMap(packageNameIconUrlMap); // Set the map of package name and icon url.
-  } // private void transferData()
 }
