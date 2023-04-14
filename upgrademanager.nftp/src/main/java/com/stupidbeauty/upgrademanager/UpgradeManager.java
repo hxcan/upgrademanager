@@ -180,6 +180,7 @@ public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePack
     {
       packageNameUrlMapDataListener.setPackageNameApplicationNameMap(packageNameApplicationNameMap);
 
+      long currentTimeMillis=System.currentTimeMillis(); // Get the curent time stamp.
       lastLoadDataTime=currentTimeMillis; // Remember load time stamp.
     } // if (packageNameUrlMapDataListener!=null) // There is a listener.
 	} //public void setPackageNameApplicationNameMap (HashMap<String, String > packageNameApplicationNameMap)
