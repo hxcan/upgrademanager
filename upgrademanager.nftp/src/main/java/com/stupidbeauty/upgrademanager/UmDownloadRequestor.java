@@ -432,7 +432,7 @@ public class UmDownloadRequestor
     */
     private void showNotificationInstall() 
     {
-      PendingIntent contentIntent = PendingIntent.getBroadcast(baseApplication, 0, new Intent(actionName), 0); // Set a broadcast intent.
+      PendingIntent contentIntent = PendingIntent.getBroadcast(baseApplication, 0, new Intent(actionName), PendingIntent.FLAG_IMMUTABLE); // Set a broadcast intent.
 
       CharSequence downloadingText=baseApplication.getText(R.string.foundNewVersion); // 构造字符串，正在下载。陈欣。
 
