@@ -70,6 +70,7 @@ import com.stupidbeauty.extremezip.EXtremeZip;
 
 public class StartIonDownloadAsyncTask extends AsyncTask<Object, Void, Object>
 {
+  private String downloadedFilePath; //!< Remember downloaded file path.
   public Future<File> fileDownloadFuture; //!<The file download future.
   private static final String TAG="StartIonDownloadAsyncTask"; //!< 输出调试信息时使用的标记。
   private String filePath; //!< file path.
@@ -154,9 +155,17 @@ public class StartIonDownloadAsyncTask extends AsyncTask<Object, Void, Object>
     Boolean result=false; //结果，是否成功。
 
     downloadRequestor=(UmDownloadRequestor)(params[0]); // Get the download reqeustor.
-    String wholePath=(String)(params[1]); // file path. 
+    String fileName=(String)(params[1]); // file path. 
     Context baseApplication = (Context)(params[2]); // Context.
     String targetUrl = (String)(params[3]); // Taget url.
+    
+    File downloadFolder = baseApplication.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
+
+    final String wholePath =downloadFolder.getPath()+ File.separator  + fileName;
+    
+    downloadedFilePath=wholePath; // Remember downloaded file path.
+    
+
     
     fileDownloadFuture= Ion.with(baseApplication)
       .load(targetUrl) 
@@ -196,5 +205,6 @@ public class StartIonDownloadAsyncTask extends AsyncTask<Object, Void, Object>
 //     transferData(); // Transfer data.
   
     downloadRequestor.setFileDownloadFuture(fileDownloadFuture); // SEt the file download future.
+    downloadRequestor.setDownloadedFilePath(  downloadedFilePath); // Set the downloaded file path.
   } //protected void onPostExecute(Boolean result)
 }

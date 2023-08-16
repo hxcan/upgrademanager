@@ -101,6 +101,14 @@ public class UmDownloadRequestor
   private long downloadId; //!<当前的下载编号
   
   /**
+  * Set the downloaded file path.
+  */
+  public void setDownloadedFilePath(  String downloadedFilePath)
+  {
+    this.downloadedFilePath = downloadedFilePath;
+  } // public void setDownloadedFilePath(  String downloadedFilePath)
+  
+  /**
   * SEt the file download future.
   */
   public void setFileDownloadFuture(Future<File> fileDownloadFuture)
@@ -326,11 +334,11 @@ public class UmDownloadRequestor
   /**
   *  Start the ion download. With async task.
   */
-  private void startIonDownloadAsync(String wholePath, String targetUrl)
+  private void startIonDownloadAsync(String fileName, String targetUrl)
   {
     StartIonDownloadAsyncTask addApkToInstallSessionTask =new StartIonDownloadAsyncTask();
     
-    addApkToInstallSessionTask.execute(this, wholePath, baseApplication, targetUrl); // 执行任务。
+    addApkToInstallSessionTask.execute(this, fileName, baseApplication, targetUrl); // 执行任务。
 
   } // private void startIonDownload()
 
@@ -344,14 +352,8 @@ public class UmDownloadRequestor
 
     String fileName=uri.getLastPathSegment(); // 获取文件名。陈欣
 
-    File downloadFolder = baseApplication.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
-
-    final String wholePath =downloadFolder.getPath()+ File.separator  + fileName;
-    
-    downloadedFilePath=wholePath; // Remember downloaded file path.
-    
     // startIonDownload(wholePath, targetUrl); // Start the ion download.
-    startIonDownloadAsync(wholePath, targetUrl); // Start the ion download.
+    startIonDownloadAsync(fileName, targetUrl); // Start the ion download.
 
     startTimeoutCancelTimer(); // Start time out cancel timer.
   } //private void downloadByIon(Uri uri)
