@@ -207,20 +207,20 @@ public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePack
 	 */
 	public String getVersionName(String packageName)
 	{
-      String versionName=null;
-      try
-      {
-		PackageManager packageManager=context.getPackageManager(); //获取软件包管理器。
-		PackageInfo packageInfo=packageManager.getPackageInfo(packageName,0); //获取对应的软件包信息。
+    String versionName=null;
+    try
+    {
+      PackageManager packageManager=context.getPackageManager(); //获取软件包管理器。
+      PackageInfo packageInfo=packageManager.getPackageInfo(packageName,0); //获取对应的软件包信息。
 
-        versionName= packageInfo.versionName; // 获取版本号名字。
-      }
-      catch (PackageManager.NameNotFoundException e) //未找到该软件包。
-      {
-		e.printStackTrace(); //报告错误。
-      } //catch (PackageManager.NameNotFoundException e) //未找到该软件包。
+      versionName= packageInfo.versionName; // 获取版本号名字。
+    }
+    catch (PackageManager.NameNotFoundException e) //未找到该软件包。
+    {
+      e.printStackTrace(); //报告错误。
+    } //catch (PackageManager.NameNotFoundException e) //未找到该软件包。
 
-      return versionName;
+    return versionName;
 	} //public String getVersionName(String packageName)
 	
 	/**
@@ -247,22 +247,18 @@ public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePack
   {
     String packageName=context.getPackageName(); // Get my own package name.
     
-//       HxLauncherApplication hxlauncherApplication=HxLauncherApplication.getInstance(); // 获取应用对象。
-      String currentVersionName=getVersionName(packageName); // 获取版本名字。
+    String currentVersionName=getVersionName(packageName); // 获取版本名字。
 
-      String availableVersonName = getAvailableVersionName(packageName); // 获取可用的版本名字。
+    String availableVersonName = getAvailableVersionName(packageName); // 获取可用的版本名字。
 
-      Log.d(TAG, "checkUpgrade. avaialable version: " + availableVersonName + ", current version: " + currentVersionName); //Debug.
+    Log.d(TAG, "checkUpgrade. avaialable version: " + availableVersonName + ", current version: " + currentVersionName); //Debug.
 
-      Version availableVersion= new Version(availableVersonName); // 已有版本对象。
+    Version availableVersion= new Version(availableVersonName); // 已有版本对象。
 
-      if (availableVersion.isHigherThan(currentVersionName)) // 有新版本
-      {
-        startDownloadApk(); // Start download apk
-      } //if (availableVersonName > currentVersionName) // 有新版本
-      else // 无新版本
-      {
-      } //else // 无新版本
+    if (availableVersion.isHigherThan(currentVersionName)) // 有新版本
+    {
+      startDownloadApk(); // Start download apk
+    } //if (availableVersonName > currentVersionName) // 有新版本
   } // private void compareVersionName()
   
   /**
@@ -464,7 +460,7 @@ public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePack
       
       boolean noAutoInstall=false;
       
-      Log.d(TAG, "checkUpgrade, 374, start actually checking upgrade, url: " + internationalizationName); // Debug.
+      // Log.d(TAG, "checkUpgrade, 374, start actually checking upgrade, url: " + internationalizationName); // Debug.
 
       downloadRequestor.requestDownloadUrl(internationalizationName, internationalizationName, applicationName, packageName, this, noAutoInstall); // 要求下载网址
       
