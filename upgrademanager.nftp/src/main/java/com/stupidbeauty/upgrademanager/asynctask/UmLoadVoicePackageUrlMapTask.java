@@ -4,7 +4,6 @@ import com.stupidbeauty.codeposition.CodePosition;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.BufferedReader;
-// import com.stupidbeauty.hxlauncher.listener.BuiltinFtpServerErrorListener; 
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -45,7 +44,6 @@ import java.util.HashMap;
 import android.view.View;
 import android.os.AsyncTask;
 import java.util.HashMap;
-// import com.stupidbeauty.hxlauncher.bean.ApplicationNamePair;
 import java.util.List;
 import android.content.pm.PackageItemInfo;
 import android.content.pm.PackageManager;
@@ -55,7 +53,6 @@ import android.graphics.drawable.AnimationDrawable;
 import android.util.Pair;
 import com.stupidbeauty.upgrademanager.bean.FieldCode;
 import com.stupidbeauty.extremezip.EXtremeZip;
-// import com.stupidbeauty.hxlauncher.datastore.RuntimeInformationStore;
 
 public class UmLoadVoicePackageUrlMapTask extends AsyncTask<Object, Void, Object>
 {
@@ -77,7 +74,7 @@ public class UmLoadVoicePackageUrlMapTask extends AsyncTask<Object, Void, Object
   private HashMap<String, String> packageNameVersionNameMap; //!< 包名与可用版本号之间的映射关系。
   private  HashMap<String, String > packageNameApplicationNameMap; //!<包名与应用程序名的映射
   private HashMap<String, String> packageNameIconUrlMap; //!< The map of package name and icon url.
-
+	private HashMap<String, String> apkUrlPackageNameMap; //!< The map of apk url to package name.
   private LoadVoicePackageUrlMapInterface launcherActivity=null; //!< 启动活动。
   
   /**
