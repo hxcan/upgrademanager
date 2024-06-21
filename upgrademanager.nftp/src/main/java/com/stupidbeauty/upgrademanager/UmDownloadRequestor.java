@@ -9,7 +9,7 @@ import java.util.TimerTask;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import com.stupidbeauty.upgrademanager.asynctask.StartIonDownloadAsyncTask;
+// import com.stupidbeauty.voiceui.VoiceUi;
 import android.os.Handler;
 import android.os.Looper;
 import android.speech.SpeechRecognizer;
@@ -99,22 +99,6 @@ public class UmDownloadRequestor
   private static final String TAG="UmDownloadRequestor"; //!< 输出调试信息了时使用的标记
 
   private long downloadId; //!<当前的下载编号
-  
-  /**
-  * Set the downloaded file path.
-  */
-  public void setDownloadedFilePath(  String downloadedFilePath)
-  {
-    this.downloadedFilePath = downloadedFilePath;
-  } // public void setDownloadedFilePath(  String downloadedFilePath)
-  
-  /**
-  * SEt the file download future.
-  */
-  public void setFileDownloadFuture(Future<File> fileDownloadFuture)
-  {
-    this.fileDownloadFuture = fileDownloadFuture;
-  } // public void setFileDownloadFuture(Future<File> fileDownloadFuture)
 
   /**
   * 要求安装应用
@@ -256,91 +240,6 @@ public class UmDownloadRequestor
 //     HxLauncherApplication baseApplication = HxLauncherApplication.getInstance(); //获取应用程序对象。
     Ion.getDefault(baseApplication).cancelAll(baseApplication);
   } // public void cancelDownload() // Cancel download.
-  
-  /**
-  * Handle download completed.
-  */
-  public void handleDownloadCompleted(String wholePath, Exception e)
-  {
-    cancelCancelTimer(); // Cancel the cancel timer.
-          
-    if (e!=null) //Some error occured.
-          {
-            Log.d(TAG,"download error:"); //Debug.
-            e.printStackTrace(); //Report error.
-                            
-            notifyDownloadFail(); // 报告下载失败。
-          } //if (e!=null) //Some error occured.
-          else // 下载完毕
-          {
-            if (autoInstall) // Auto install
-            {
-              if (checkIsApkFile(wholePath)) // 是安装包文件。
-              {
-                registerReceiverInstall(); // Register receiver of install.
-              
-                showNotificationInstall(); // Show notification to request install.
-              } // if (checkIsApkFile(wholePath)) // 是安装包文件。
-              else // 不是安装包。
-              {
-                notifyDownloadFail(); // 报告下载失败。
-              } // else // 不是安装包。
-            }
-            else // Not auto install
-            {
-              notifyDownloadFinish(wholePath); // Report download finished.
-            }
-          } //else // 下载完毕
-  } // private void handleDownloadCompleted()
-  
-  /**
-  * Handle download progress.
-  */
-  public void handleDownloadProgress(String targetUrl, long total, long downloaded)
-  {
-    startTimeoutCancelTimer(); // Start time out cancel timer.
-    Log.d(TAG, "downloadByIon, 274, progress: " + downloaded + "/" + total + ", " + targetUrl); // 报告进度。
-  } // private void handleDownloadProgress()
-  
-  /**
-  *  Start the ion download.
-  */
-  private void startIonDownload(String wholePath, String targetUrl)
-  {
-    fileDownloadFuture= Ion.with(baseApplication)
-      .load(targetUrl) 
-      .setTimeout(15000) //Set the time out to be 15s.
-      .progress(new ProgressCallback() 
-      {
-        @Override
-        public void onProgress(long downloaded, long total) 
-        {
-          handleDownloadProgress(targetUrl, total, downloaded); // Handle download progress.
-        }
-      })
-      .write(new File( wholePath));
-      
-      
-      fileDownloadFuture.setCallback(new FutureCallback<File>() 
-      {
-        @Override
-        public void onCompleted(Exception e, File file) 
-        {
-          handleDownloadCompleted(wholePath, e); // Handle download completed.
-        } // public void onCompleted(Exception e, File file) 
-      });
-  } // private void startIonDownload()
-
-  /**
-  *  Start the ion download. With async task.
-  */
-  private void startIonDownloadAsync(String fileName, String targetUrl)
-  {
-    StartIonDownloadAsyncTask addApkToInstallSessionTask =new StartIonDownloadAsyncTask();
-    
-    addApkToInstallSessionTask.execute(this, fileName, baseApplication, targetUrl); // 执行任务。
-
-  } // private void startIonDownload()
 
   /**
   * 使用离子下载来下载。
@@ -352,11 +251,76 @@ public class UmDownloadRequestor
 
     String fileName=uri.getLastPathSegment(); // 获取文件名。陈欣
 
-    // startIonDownload(wholePath, targetUrl); // Start the ion download.
-    startIonDownloadAsync(fileName, targetUrl); // Start the ion download.
+    File downloadFolder = baseApplication.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
 
-    startTimeoutCancelTimer(); // Start time out cancel timer.
-  } //private void downloadByIon(Uri uri)
+    final String wholePath =downloadFolder.getPath()+ File.separator  + fileName;
+    
+    downloadedFilePath=wholePath; // Remember downloaded file path.
+
+    fileDownloadFuture= Ion.with(baseApplication)
+      .load(targetUrl) 
+      .setTimeout(15000) //Set the time out to be 15s.
+      .progress(new ProgressCallback() 
+      {
+        @Override
+        public void onProgress(long downloaded, long total) 
+        {
+//           timerObj.cancel(); // Cancel the timer of cancel.
+          startTimeoutCancelTimer(); // Start time out cancel timer.
+          Log.d(TAG, "downloadByIon, 274, progress: " + downloaded + "/" + total + ", " + targetUrl); // 报告进度。
+        }
+      })
+      .setLogging(TAG, Log.DEBUG).write(new File( wholePath));
+      
+      
+      fileDownloadFuture.setCallback(new FutureCallback<File>() 
+      {
+        @Override
+        public void onCompleted(Exception e, File file) 
+        {
+//           timerObj.cancel(); // Cancel the timer of cancel.
+          cancelCancelTimer(); // Cancel the cancel timer.
+          
+          // download done...
+          // do stuff with the File or error
+
+          if (e!=null) //Some error occured.
+          {
+//             Toast.makeText(baseApplication, "Download Failed" + targetUrl, Toast.LENGTH_SHORT).show();
+
+            Log.d(TAG,"download error:"); //Debug.
+            e.printStackTrace(); //Report error.
+                            
+            //                             陈欣
+            notifyDownloadFail(); // 报告下载失败。
+          } //if (e!=null) //Some error occured.
+          else // 下载完毕
+          {
+//             Toast.makeText(baseApplication, "Download Completed" + wholePath, Toast.LENGTH_SHORT).show();
+
+            if (autoInstall) // Auto install
+            {
+              if (checkIsApkFile(wholePath)) // 是安装包文件。
+              {
+                registerReceiverInstall(); // Register receiver of install.
+              
+                showNotificationInstall(); // Show notification to request install.
+//                 requestInstall(wholePath); // 要求安装。陈欣。
+              } // if (checkIsApkFile(wholePath)) // 是安装包文件。
+              else // 不是安装包。
+              {
+                notifyDownloadFail(); // 报告下载失败。
+              } // else // 不是安装包。
+            }
+            else // Not auto install
+            {
+              notifyDownloadFinish(wholePath); // Report download finished.
+            }
+          } //else // 下载完毕
+        }
+      });
+      startTimeoutCancelTimer(); // Start time out cancel timer.
+    } //private void downloadByIon(Uri uri)
     
     /**
     * Cancel the cancel timer.
@@ -403,7 +367,7 @@ public class UmDownloadRequestor
         uiHandler.post(runnable);
       }
     };
-
+    Log.d(TAG, "startTimeoutCancelTimer, 358, scheduling"); // Debug.
     timerObj.schedule(timerTaskObj, 60*1000); // 延时启动。
   } // private void startTimeoutCancelTimer()
   
@@ -468,7 +432,7 @@ public class UmDownloadRequestor
     */
     private void showNotificationInstall() 
     {
-      PendingIntent contentIntent = PendingIntent.getBroadcast(baseApplication, 0, new Intent(actionName), PendingIntent.FLAG_IMMUTABLE); // Set a broadcast intent.
+      PendingIntent contentIntent = PendingIntent.getBroadcast(baseApplication, 0, new Intent(actionName), 0); // Set a broadcast intent.
 
       CharSequence downloadingText=baseApplication.getText(R.string.foundNewVersion); // 构造字符串，正在下载。陈欣。
 

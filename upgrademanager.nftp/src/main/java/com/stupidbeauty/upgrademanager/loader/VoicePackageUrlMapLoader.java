@@ -54,6 +54,7 @@ import android.graphics.drawable.AnimationDrawable;
 import android.util.Pair;
 import com.stupidbeauty.upgrademanager.bean.FieldCode;
 import com.stupidbeauty.extremezip.EXtremeZip;
+// import com.stupidbeauty.hxlauncher.datastore.RuntimeInformationStore;
 
 public class VoicePackageUrlMapLoader
 {
@@ -75,16 +76,18 @@ public class VoicePackageUrlMapLoader
   private HashMap<String, String> packageNameVersionNameMap; //!< 包名与可用版本号之间的映射关系。
   private  HashMap<String, String > packageNameApplicationNameMap; //!<包名与应用程序名的映射
   private HashMap<String, String> packageNameIconUrlMap; //!< The map of package name and icon url.
-	private HashMap<String, String> apkUrlPackageNameMap; //!< The map of apk url to package name.
 
-	/**
+//   private LoadVoicePackageUrlMapInterface launcherActivity=null; //!< 启动活动。
+  
+  /**
   * 载入语音识别结果与下载网址之间的映射。使用CBOR。陈欣。
   */
   public void loadVoicePackageUrlMapCbor(byte[] photoBytes)
   {
+//     File photoFile=new File(filePath); // The data file.
+
     voicePackageUrlMap=new HashMap<>(); //创建映射。
     packageNameUrlMap=new HashMap<>(); //创建映射
-    apkUrlPackageNameMap = new HashMap<>(); // Creat eh map.
     packageNameInstallerTypeMap=new HashMap<>(); // Create map of installer type.
     packageNameInformationUrlMap=new HashMap<>(); // 创建映射。
     packageNameExtraPackageNamesMap=new HashMap<>(); // Create map.
@@ -94,6 +97,8 @@ public class VoicePackageUrlMapLoader
 
     try
     {
+//       byte[] photoBytes= FileUtils.readFileToByteArray(photoFile); // 将 data 文件内容全部读取。
+
       CBORObject videoStreamMessage= CBORObject.DecodeFromBytes(photoBytes); //解析消息。
 
       Collection<CBORObject> subFilesList=videoStreamMessage.get("voicePackageMapJsonItemList").getValues();
@@ -113,7 +118,14 @@ public class VoicePackageUrlMapLoader
         
         String packageName=currentSubFile.get("packageName").AsString();
         String informationUrl=currentSubFile.get("informationUrl").AsString(); // 获取信息页面地址。
-        String iconUrl=currentSubFile.get("iconUrl").AsString(); // Get package icon url.
+        String iconUrl = null; // Get package icon url.
+        
+        CBORObject iconUrlObject = currentSubFile.get("iconUrl"); // Get the icon url object.
+        
+        if (iconUrlObject != null) // The object exists
+        {
+          iconUrl = iconUrlObject.AsString(); // Get package icon url.
+        } // if (iconUrlObject != null) // The object exists
 
         ArrayList<String> extraPackageNames = new ArrayList<>();
 
@@ -159,7 +171,6 @@ public class VoicePackageUrlMapLoader
                   
         voicePackageUrlMap.put(voiceCommand, packageUrl); //加入映射。
         packageNameUrlMap.put(packageName, packageUrl); //加入映射。
-        apkUrlPackageNameMap.put(packageUrl, packageName); // Add the map entry.
         packageNameInstallerTypeMap.put(packageName, installerType); // 加入映射。 installer type.
         packageNameApplicationNameMap.put( packageName, voiceCommand); //加入映射，包名与应用程序名的映射
         packageNameInformationUrlMap.put(packageName, informationUrl); // 加入映射，包名与信息页面地址的映射。
@@ -167,6 +178,7 @@ public class VoicePackageUrlMapLoader
         
         for(String currentPackgaeName: extraPackageNames) // Add to map one by one
         {
+//           packageNameExtraPackageNamesMap.put(currentPackgaeName, extraPackageNames); // Add map, package name to extram package names list.
           packageNameUrlMap.put(currentPackgaeName, packageUrl); // 加入映射。
         } // for(String currentPackgaeName: extraPackageNames) // Add to map one by one
       } //for (FileMessageContainer.FileMessage currentSubFile:videoStreamMessage.getSubFilesList()) //一个个子文件地比较其
@@ -186,7 +198,6 @@ public class VoicePackageUrlMapLoader
     {
       launcherActivity.setVoicePackageUrlMap(voicePackageUrlMap);
       launcherActivity.setPackageNameUrlMap(packageNameUrlMap);
-      launcherActivity.setApkUrlPackageNameMap(apkUrlPackageNameMap); // Set the apk url to package name map.
       launcherActivity.setPackageNameInstallerTypeMap(packageNameInstallerTypeMap); // Set package name installer type map.
       launcherActivity.setPackageNameVersionNameMap(packageNameVersionNameMap);
       launcherActivity.setPackageNameInformationUrlMap(packageNameInformationUrlMap); // 设置包名与信息页面地址之间的映射。

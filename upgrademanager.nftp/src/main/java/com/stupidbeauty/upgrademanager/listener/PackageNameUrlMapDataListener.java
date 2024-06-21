@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.HashMap;
 import android.content.Context;
 import com.stupidbeauty.victoriafresh.VFile;
+// import com.stupidbeauty.grebe.DownloadRequestor;
 import android.view.View;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
@@ -23,5 +24,4 @@ public interface PackageNameUrlMapDataListener
   public void setPackageNameVersionNameMap (HashMap<String, String> packageNameVersionNameMap);
 	public void setPackageNameApplicationNameMap (HashMap<String, String > packageNameApplicationNameMap); //!< Set the map of package name to application name.
   public void setPackageNameIconUrlMap(HashMap<String, String> packageNameUrlMap); //!< set the map of package name to icon url.
-	public void setApkUrlPackageNameMap(HashMap<String, String > packageNameApplicationNameMap); //!< Set the map of apk url to package name.
 }
