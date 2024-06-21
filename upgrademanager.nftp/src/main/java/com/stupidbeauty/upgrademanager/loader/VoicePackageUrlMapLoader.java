@@ -129,24 +129,34 @@ public class VoicePackageUrlMapLoader
 
         ArrayList<String> extraPackageNames = new ArrayList<>();
 
-        Collection<CBORObject> extraPackageNamesList=currentSubFile.get("extraPackageNames").getValues();
+        Collection<CBORObject> extraPackageNamesList = null;
         
-        if (extraPackageNamesList.size() > 0) // There is extra package names list
+        CBORObject extraPackageNamesObject = currentSubFile.get("extraPackageNames"); // Get the list object.
+        
+        if (extraPackageNamesObject != null) // The object exists
         {
-          extraPackageNames.add(packageName); // Add the package name itself.
+          extraPackageNamesList = extraPackageNamesObject.getValues();
+        } // if (extraPackageNamesObject != null) // The object exists
 
-          for(CBORObject extraPackgaeName: extraPackageNamesList)
+        if (extraPackageNamesList != null) // The list exists
+        {
+          if (extraPackageNamesList.size() > 0) // There is extra package names list
           {
-            String extraPackageNameString = extraPackgaeName.AsString();
-            
-            extraPackageNames.add(extraPackageNameString);
-          } // for(CBORObject extraPackgaeName: extraPackageNamesList)
+            extraPackageNames.add(packageName); // Add the package name itself.
 
-          for(String currentPackgaeName: extraPackageNames) // Add to map one by one
-          {
-            packageNameExtraPackageNamesMap.put(currentPackgaeName, extraPackageNames); // Add map, package name to extram package names list.
-          } // for(String currentPackgaeName: extraPackageNames) // Add to map one by one
-        } // if (extraPackageNamesList.size() > 0) // There is extra package names list
+            for(CBORObject extraPackgaeName: extraPackageNamesList)
+            {
+              String extraPackageNameString = extraPackgaeName.AsString();
+              
+              extraPackageNames.add(extraPackageNameString);
+            } // for(CBORObject extraPackgaeName: extraPackageNamesList)
+
+            for(String currentPackgaeName: extraPackageNames) // Add to map one by one
+            {
+              packageNameExtraPackageNamesMap.put(currentPackgaeName, extraPackageNames); // Add map, package name to extram package names list.
+            } // for(String currentPackgaeName: extraPackageNames) // Add to map one by one
+          } // if (extraPackageNamesList.size() > 0) // There is extra package names list
+        } // if (extraPackageNamesList != null) // The list exists
               
         CBORObject versionNameObject=currentSubFile.get("versionName");
 
