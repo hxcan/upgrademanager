@@ -102,17 +102,18 @@ public class VoicePackageUrlMapLoader
       {
         String voiceCommand=currentSubFile.get("voiceCommand").AsString();
         String packageUrl=currentSubFile.get("packageUrl").AsString();
-        String installerType=currentSubFile.get("installerType").AsString(); // Get installer type. xapk or apk
+        String installerType = null; // Get installer type. xapk or apk
+        
+        CBORObject installerTypeObject = currentSubFile.get("installerType"); // Get the installer type object.
+        
+        if (installerTypeObject != null) // The object exists
+        {
+          installerType = installerTypeObject.AsString(); // Get installer type. xapk or apk
+        } // if (installerTypeObject != null) // The object exists
+        
         String packageName=currentSubFile.get("packageName").AsString();
         String informationUrl=currentSubFile.get("informationUrl").AsString(); // 获取信息页面地址。
         String iconUrl=currentSubFile.get("iconUrl").AsString(); // Get package icon url.
-        
-        String debugPackageName="com.feicui.vdhelper"; // The debu gpackage name.
-        
-        if (packageName.equals(debugPackageName)) // Debug.
-        {
-          Log.d(TAG, CodePosition.newInstance().toString()+ ", package name: " + packageName); // Debug.
-        } // if (packageName.equals(debugPackageName)) // Debug.
 
         ArrayList<String> extraPackageNames = new ArrayList<>();
 
@@ -149,14 +150,12 @@ public class VoicePackageUrlMapLoader
         {
           String versionName=versionNameObject.AsString();
 
-        if (packageName.equals(debugPackageName)) // Debug.
-        {
-          // Log.d(TAG, CodePosition.newInstance().toString()+ ", package name: " + packageName); // Debug.
-          Log.d(TAG, CodePosition.newInstance().toString()+ ", version name: " + versionName); // Debug.
-        } // if (packageName.equals(debugPackageName)) // Debug.
-
-        packageNameVersionNameMap.put(packageName, versionName); // 加入映射。
+          packageNameVersionNameMap.put(packageName, versionName); // 加入映射。
         } //versionNameObject
+        else // Object not exist
+        {
+          versionNameObject=currentSubFile.get(FieldCode.VersionName); // Get by int key.
+        } // else // Object not exist
                   
         voicePackageUrlMap.put(voiceCommand, packageUrl); //加入映射。
         packageNameUrlMap.put(packageName, packageUrl); //加入映射。
