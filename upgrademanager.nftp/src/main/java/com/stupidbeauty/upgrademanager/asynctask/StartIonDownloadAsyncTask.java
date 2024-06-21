@@ -1,9 +1,17 @@
 package com.stupidbeauty.upgrademanager.asynctask;
 
+import com.koushikdutta.ion.Ion;
+import com.koushikdutta.ion.ProgressCallback;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
 import com.stupidbeauty.codeposition.CodePosition;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.BufferedReader;
+import com.koushikdutta.async.future.FutureCallback;
+import org.apache.commons.io.FilenameUtils;
+import java.io.File;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -11,6 +19,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
 import com.stupidbeauty.upgrademanager.loader.VoicePackageUrlMapLoader;
+import com.stupidbeauty.upgrademanager.UmDownloadRequestor;
 import java.lang.reflect.Type;
 import java.lang.reflect.Field;
 import com.upokecenter.cbor.CBORObject;
@@ -44,6 +53,10 @@ import java.util.HashMap;
 import android.view.View;
 import android.os.AsyncTask;
 import java.util.HashMap;
+import com.koushikdutta.async.future.Future;
+import com.koushikdutta.async.future.FutureCallback;
+import org.apache.commons.io.FilenameUtils;
+import java.io.File;
 import java.util.List;
 import android.content.pm.PackageItemInfo;
 import android.content.pm.PackageManager;
@@ -53,14 +66,18 @@ import android.graphics.drawable.AnimationDrawable;
 import android.util.Pair;
 import com.stupidbeauty.upgrademanager.bean.FieldCode;
 import com.stupidbeauty.extremezip.EXtremeZip;
+// import com.stupidbeauty.hxlauncher.datastore.RuntimeInformationStore;
 
-public class UmLoadVoicePackageUrlMapTask extends AsyncTask<Object, Void, Object>
+public class StartIonDownloadAsyncTask extends AsyncTask<Object, Void, Object>
 {
-  private static final String TAG="UmLoadVoicePackageUrlMapTask"; //!< 输出调试信息时使用的标记。
+  private String downloadedFilePath; //!< Remember downloaded file path.
+  public Future<File> fileDownloadFuture; //!<The file download future.
+  private static final String TAG="StartIonDownloadAsyncTask"; //!< 输出调试信息时使用的标记。
   private String filePath; //!< file path.
   private String exzFilePath; //!< exz data file path.
   private HashMap<String, String> voicePackageUrlMap; //!<语音识别结果与包名之间的映射关系。
   private VoicePackageUrlMapLoader voicePackageUrlMapLoader=null; //!< voice package url map loader.
+  private UmDownloadRequestor downloadRequestor; //!< The download reqeustor.
 
   public HashMap<String, String> getPackageNameUrlMap() 
   {
@@ -74,7 +91,7 @@ public class UmLoadVoicePackageUrlMapTask extends AsyncTask<Object, Void, Object
   private HashMap<String, String> packageNameVersionNameMap; //!< 包名与可用版本号之间的映射关系。
   private  HashMap<String, String > packageNameApplicationNameMap; //!<包名与应用程序名的映射
   private HashMap<String, String> packageNameIconUrlMap; //!< The map of package name and icon url.
-	private HashMap<String, String> apkUrlPackageNameMap; //!< The map of apk url to package name.
+
   private LoadVoicePackageUrlMapInterface launcherActivity=null; //!< 启动活动。
   
   /**
@@ -137,15 +154,41 @@ public class UmLoadVoicePackageUrlMapTask extends AsyncTask<Object, Void, Object
   {
     Boolean result=false; //结果，是否成功。
 
-    launcherActivity=(LoadVoicePackageUrlMapInterface)(params[0]); // 获取映射对象
-    exzFilePath=(String)(params[1]); // file path. compressed.
+    downloadRequestor=(UmDownloadRequestor)(params[0]); // Get the download reqeustor.
+    String fileName=(String)(params[1]); // file path. 
+    Context baseApplication = (Context)(params[2]); // Context.
+    String targetUrl = (String)(params[3]); // Taget url.
     
-    filePath=exuzDataFile(exzFilePath); // uncompress the compressed data file.
-            
-//     loadVoicePackageUrlMapCbor(); // 载入语音识别结果与下载网址之间的映射。使用CBOR。陈欣。
-    loadVoicePackageUrlMapCborLoader(); // 载入语音识别结果与下载网址之间的映射。使用CBOR。陈欣。 Use the loader
-            
-    boolean addPhotoFile=false; //Whether to add photo file
+    File downloadFolder = baseApplication.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
+
+    final String wholePath =downloadFolder.getPath()+ File.separator  + fileName;
+    
+    downloadedFilePath=wholePath; // Remember downloaded file path.
+    
+
+    
+    fileDownloadFuture= Ion.with(baseApplication)
+      .load(targetUrl) 
+      .setTimeout(15000) //Set the time out to be 15s.
+      .progress(new ProgressCallback() 
+      {
+        @Override
+        public void onProgress(long downloaded, long total) 
+        {
+          downloadRequestor.handleDownloadProgress(targetUrl, total, downloaded); // Handle download progress.
+        }
+      })
+      .write(new File( wholePath));
+      
+      
+      fileDownloadFuture.setCallback(new FutureCallback<File>() 
+      {
+        @Override
+        public void onCompleted(Exception e, File file) 
+        {
+          downloadRequestor.handleDownloadCompleted(wholePath, e); // Handle download completed.
+        } // public void onCompleted(Exception e, File file) 
+      });
 
     return voicePackageUrlMap;
   } //protected Object doInBackground(Object... params)
@@ -157,9 +200,11 @@ public class UmLoadVoicePackageUrlMapTask extends AsyncTask<Object, Void, Object
   @Override
   protected void onPostExecute(Object result)
   {
-    voicePackageUrlMapLoader.transferData(launcherActivity);
+    // voicePackageUrlMapLoader.transferData(launcherActivity);
     
 //     transferData(); // Transfer data.
   
+    downloadRequestor.setFileDownloadFuture(fileDownloadFuture); // SEt the file download future.
+    downloadRequestor.setDownloadedFilePath(  downloadedFilePath); // Set the downloaded file path.
   } //protected void onPostExecute(Boolean result)
 }

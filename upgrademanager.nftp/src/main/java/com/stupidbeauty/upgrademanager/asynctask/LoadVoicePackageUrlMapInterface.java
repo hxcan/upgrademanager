@@ -21,4 +21,5 @@ public interface LoadVoicePackageUrlMapInterface
   void setPackageNameExtraPackageNamesMap(HashMap<String, List<String> > packageNameExtraPackageNamesMap); //!< Set the map of package name to extra package names list.
 	void setPackageNameApplicationNameMap (HashMap<String, String > packageNameApplicationNameMap); //!< Set the map of package name to application name.
   void setPackageNameIconUrlMap(HashMap<String, String> packageNameUrlMap); //!< set the map of package name to icon url.
+	public void setApkUrlPackageNameMap(HashMap<String, String > packageNameApplicationNameMap); //!< Set the map of apk url to package name.
 } // public interface LoadVoicePackageUrlMapInterface
