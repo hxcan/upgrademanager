@@ -1,0 +1,22 @@
+<resources>
+  <string name="foundNewVersion">发现新版本</string>
+  <string name="applicationIcon">应用程序图标</string>
+  <string name="myAccount">我的账号</string>
+  <string name="emailAddress">邮箱/用户名</string>
+  <string name="shortcutAdded">快捷方式已添加</string>
+  <string name="apn_setting_username">用户名</string>
+  <string name="login_in">登录</string>
+  <string name="login_login_button">登录</string>
+  <string name="forwardWeb">前进</string>
+  <string name="registerInfo">注册信息</string>
+  <string name="country">国家</string>
+  <string name="inputValidationCode">输入验证码</string>
+  <string name="sendValidationCode">发送验证码</string>
+  <string name="emailLogin">使用邮箱登录</string>
+  <string name="hxlauncherService">灵桌面服务</string>
+  <string name="enable">启用</string>
+  <string name="statusNormal">状态正常</string>
+  <string name="password">密码</string>
+  <string name="goAndEnableLocationService">去启用</string>
+  <string name="startDownload">开始下载</string>
+</resources>
