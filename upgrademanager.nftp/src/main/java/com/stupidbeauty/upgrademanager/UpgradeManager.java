@@ -1,5 +1,10 @@
 package com.stupidbeauty.upgrademanager;
 
+import com.stupidbeauty.appstore.bean.AndroidPackageInformation;
+import com.stupidbeauty.upgrademanager.parser.TimeStampParser;
+import com.stupidbeauty.codeposition.CodePosition;
+import java.io.FileDescriptor;
+import java.io.FileInputStream;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
@@ -74,6 +79,7 @@ public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePack
   private HashMap<String, String> packageNameApplicationNameMap; //!< Map of package name to application name.
   private HashMap<String, List<String> > packageNameExtraPackageNamesMap; //!< Map of packge name to extra package names.
   private PackageNameUrlMapDataListener packageNameUrlMapDataListener; //!< Package name url map data listener.
+  private List<AndroidPackageInformation> packages; //!< The packag informatin list.
 
   /**
   * Set package name url map data listener.
@@ -114,6 +120,19 @@ public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePack
         packageNameUrlMapDataListener.setPackageNameInformationUrlMap(packageNameInformationUrlMap);
       } // if (packageNameUrlMapDataListener!=null) // Listenre exists.
 	} // public void setPackageNameInformationUrlMap(HashMap<String, String> packageNameInformationUrlMap)
+	
+	/**
+	* Set the package list.
+	*/
+	public void setPackages(List<AndroidPackageInformation> packageList)
+	{
+    this.packages = packageList;
+    
+    if (packageNameUrlMapDataListener!=null)
+    {
+      packageNameUrlMapDataListener.setPackages(packageList);
+    } // if (packageNameUrlMapDataListener!=null)
+	} // public void setPackages(List<AndroidPackageInformation> packageList)
 
   /**
   * 设置包名与下载地址之间的映射关系。

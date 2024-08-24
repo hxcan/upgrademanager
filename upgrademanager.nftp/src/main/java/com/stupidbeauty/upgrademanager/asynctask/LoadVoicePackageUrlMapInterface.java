@@ -1,5 +1,10 @@
 package com.stupidbeauty.upgrademanager.asynctask;
 
+import com.stupidbeauty.appstore.bean.AndroidPackageInformation;
+import com.stupidbeauty.upgrademanager.parser.TimeStampParser;
+import com.stupidbeauty.codeposition.CodePosition;
+import java.io.FileDescriptor;
+import java.io.FileInputStream;
 import android.content.Context;
 import android.database.Cursor;
 import android.view.View;
@@ -22,4 +27,5 @@ public interface LoadVoicePackageUrlMapInterface
 	void setPackageNameApplicationNameMap (HashMap<String, String > packageNameApplicationNameMap); //!< Set the map of package name to application name.
   void setPackageNameIconUrlMap(HashMap<String, String> packageNameUrlMap); //!< set the map of package name to icon url.
 	public void setApkUrlPackageNameMap(HashMap<String, String > packageNameApplicationNameMap); //!< Set the map of apk url to package name.
+	void setPackages(List<AndroidPackageInformation> packageList); //!< Set the package list.
 } // public interface LoadVoicePackageUrlMapInterface

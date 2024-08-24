@@ -1,5 +1,7 @@
 package com.stupidbeauty.upgrademanager.loader;
 
+import com.stupidbeauty.appstore.bean.AndroidPackageInformation;
+import com.stupidbeauty.upgrademanager.parser.TimeStampParser;
 import com.stupidbeauty.codeposition.CodePosition;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
@@ -71,6 +73,7 @@ public class VoicePackageUrlMapLoader
   private HashMap<String, String> packageNameUrlMap; //!<包名与下载地址之间的映射关系。
   private HashMap<String, String> packageNameInstallerTypeMap; //!< Map of package name to installer type.
   private HashMap<String, String> packageNameInformationUrlMap; //!<包名与信息页面地址之间的映射关系。
+  private List<AndroidPackageInformation> packageList; //!< The packag informatin list.
   private HashMap<String, List<String> > packageNameExtraPackageNamesMap; //!< The map of package name to extra package names.
   private HashMap<String, String> packageNameVersionNameMap; //!< 包名与可用版本号之间的映射关系。
   private  HashMap<String, String > packageNameApplicationNameMap; //!<包名与应用程序名的映射
@@ -91,6 +94,7 @@ public class VoicePackageUrlMapLoader
     packageNameVersionNameMap=new HashMap<>(); // 创建映射。陈欣
     packageNameApplicationNameMap=new HashMap<>(); //创建映射
     packageNameIconUrlMap=new HashMap<>(); //创建映射. package name to icon url.
+    packageList = new ArrayList<>(); // The package list.
 
     try
     {
@@ -100,20 +104,33 @@ public class VoicePackageUrlMapLoader
 
       for (CBORObject currentSubFile: subFilesList) //一个个子文件地比较其文件名。
       {
+        AndroidPackageInformation packageInfo = new AndroidPackageInformation();
+
+      
+      
         String voiceCommand=currentSubFile.get("voiceCommand").AsString();
         String packageUrl=currentSubFile.get("packageUrl").AsString();
         String installerType = null; // Get installer type. xapk or apk
         
+        packageInfo.setAppName(voiceCommand);
+        packageInfo.setInstallUrl(packageUrl);
+
         CBORObject installerTypeObject = currentSubFile.get("installerType"); // Get the installer type object.
         
         if (installerTypeObject != null) // The object exists
         {
           installerType = installerTypeObject.AsString(); // Get installer type. xapk or apk
         } // if (installerTypeObject != null) // The object exists
-        
+
+        packageInfo.setPackageType(installerType);
+
         String packageName=currentSubFile.get("packageName").AsString();
         String informationUrl=currentSubFile.get("informationUrl").AsString(); // 获取信息页面地址。
         String iconUrl = null; // Get package icon url.
+        
+        packageInfo.setPackageName(packageName);
+        packageInfo.setInfoUrl(informationUrl);
+
         
         CBORObject iconUrlObject = currentSubFile.get("iconUrl"); // Get the icon url object.
         
@@ -121,7 +138,21 @@ public class VoicePackageUrlMapLoader
         {
           iconUrl = iconUrlObject.AsString(); // Get package icon url.
         } // if (iconUrlObject != null) // The object exists
-        
+
+        packageInfo.setIconUrl(iconUrl);
+
+        // 假设 currentSubFile 是一个包含应用信息的 CBOR 对象
+        CBORObject modifiedObject = currentSubFile.get("modified"); // 获取modified字段的值
+
+        if (modifiedObject != null)   // 如果modified字段存在
+        {
+          String lastModifiedString = modifiedObject.AsString(); // 获取modified字段的值
+          long lastModifiedTimestampnewDategetTime = TimeStampParser.main(lastModifiedString); // Parse the timestamp.
+          
+          packageInfo.setLastModified(lastModifiedTimestampnewDategetTime); // 设置为当前时间
+        } // if (modifiedObject != null)
+
+
         String debugPackageName="com.feicui.vdhelper"; // The debu gpackage name.
         
         if (packageName.equals(debugPackageName)) // Debug.
@@ -149,6 +180,7 @@ public class VoicePackageUrlMapLoader
             for(CBORObject extraPackgaeName: extraPackageNamesList)
             {
               String extraPackageNameString = extraPackgaeName.AsString();
+              packageInfo.addExtraPackageName(extraPackageNameString);
               
               extraPackageNames.add(extraPackageNameString);
             } // for(CBORObject extraPackgaeName: extraPackageNamesList)
@@ -173,14 +205,15 @@ public class VoicePackageUrlMapLoader
         if (versionNameObject!=null) // Version name object exists
         {
           String versionName=versionNameObject.AsString();
+          packageInfo.setVersionCode(versionName);
 
-        if (packageName.equals(debugPackageName)) // Debug.
-        {
-          // Log.d(TAG, CodePosition.newInstance().toString()+ ", package name: " + packageName); // Debug.
-          Log.d(TAG, CodePosition.newInstance().toString()+ ", version name: " + versionName); // Debug.
-        } // if (packageName.equals(debugPackageName)) // Debug.
+          if (packageName.equals(debugPackageName)) // Debug.
+          {
+            // Log.d(TAG, CodePosition.newInstance().toString()+ ", package name: " + packageName); // Debug.
+            Log.d(TAG, CodePosition.newInstance().toString()+ ", version name: " + versionName); // Debug.
+          } // if (packageName.equals(debugPackageName)) // Debug.
 
-        packageNameVersionNameMap.put(packageName, versionName); // 加入映射。
+          packageNameVersionNameMap.put(packageName, versionName); // 加入映射。
         } //versionNameObject
                   
         voicePackageUrlMap.put(voiceCommand, packageUrl); //加入映射。
@@ -190,6 +223,7 @@ public class VoicePackageUrlMapLoader
         packageNameApplicationNameMap.put( packageName, voiceCommand); //加入映射，包名与应用程序名的映射
         packageNameInformationUrlMap.put(packageName, informationUrl); // 加入映射，包名与信息页面地址的映射。
         packageNameIconUrlMap.put(packageName, iconUrl); // Add map item.
+        packageList.add(packageInfo); // Add the package into the list.
         
         for(String currentPackgaeName: extraPackageNames) // Add to map one by one
         {
@@ -219,6 +253,8 @@ public class VoicePackageUrlMapLoader
       launcherActivity.setPackageNameExtraPackageNamesMap(packageNameExtraPackageNamesMap); // Set the map of package name to extra package names list.
       launcherActivity.setPackageNameApplicationNameMap(packageNameApplicationNameMap); // Set map of package name to application name.
       launcherActivity.setPackageNameIconUrlMap(packageNameIconUrlMap); // Set the map of package name and icon url.
+      
+      launcherActivity.setPackages(packageList); // Set the package list.
     } // if (packageNameVersionNameMap!=null) // Actually loaded data
     else // Not loaded data
     {

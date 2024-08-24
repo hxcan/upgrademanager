@@ -1,5 +1,10 @@
 package com.stupidbeauty.upgrademanager.listener;
 
+import com.stupidbeauty.appstore.bean.AndroidPackageInformation;
+import com.stupidbeauty.upgrademanager.parser.TimeStampParser;
+import com.stupidbeauty.codeposition.CodePosition;
+import java.io.FileDescriptor;
+import java.io.FileInputStream;
 import java.util.HashMap;
 import java.util.HashMap;
 import android.content.Context;
@@ -24,4 +29,5 @@ public interface PackageNameUrlMapDataListener
 	public void setPackageNameApplicationNameMap (HashMap<String, String > packageNameApplicationNameMap); //!< Set the map of package name to application name.
   public void setPackageNameIconUrlMap(HashMap<String, String> packageNameUrlMap); //!< set the map of package name to icon url.
 	public void setApkUrlPackageNameMap(HashMap<String, String > packageNameApplicationNameMap); //!< Set the map of apk url to package name.
+	void setPackages(List<AndroidPackageInformation> packageList); //!< Set the package list.
 }
