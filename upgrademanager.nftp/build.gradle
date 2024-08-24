@@ -54,7 +54,7 @@ afterEvaluate
         from components.release
         groupId = 'com.github.hxcan'
         artifactId = 'upgrademanager'
-        version = '2024.8.24'
+        version = '2024.8.25'
       }
     }
   }

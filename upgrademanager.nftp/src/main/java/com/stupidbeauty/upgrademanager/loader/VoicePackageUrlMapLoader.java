@@ -142,6 +142,7 @@ public class VoicePackageUrlMapLoader
         packageInfo.setIconUrl(iconUrl);
 
         // 假设 currentSubFile 是一个包含应用信息的 CBOR 对象
+        // modified
         CBORObject modifiedObject = currentSubFile.get("modified"); // 获取modified字段的值
 
         if (modifiedObject != null)   // 如果modified字段存在

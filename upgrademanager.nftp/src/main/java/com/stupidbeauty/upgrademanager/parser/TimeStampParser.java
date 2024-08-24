@@ -13,8 +13,9 @@ public class TimeStampParser
     // String timestampString = "Sat Aug 24 13:12:11 2024";
     
     // 定义日期格式
-    SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy");
-        
+    // SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy");
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+
     try 
     {
       // 解析时间戳字符串
