@@ -80,6 +80,23 @@ public class UpgradeManager implements DownloadRequestorInterface, LoadVoicePack
   private HashMap<String, List<String> > packageNameExtraPackageNamesMap; //!< Map of packge name to extra package names.
   private PackageNameUrlMapDataListener packageNameUrlMapDataListener; //!< Package name url map data listener.
   private List<AndroidPackageInformation> packages; //!< The packag informatin list.
+  
+  public static boolean isLocalDatabaseExists(Context context) 
+  {
+    String fileName = "voicePackageUrlMap.cbor.cx.exz";
+    File downloadFolder = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
+
+    String wholePath = downloadFolder.getPath() + File.separator + fileName + ".cache";
+    File cacheFile = new File(wholePath);
+
+    if (cacheFile.exists()) {
+        return true;
+    }
+
+    // 尝试检查非 .cache 文件
+    File normalFile = new File(downloadFolder, fileName);
+    return normalFile.exists();
+  }
 
   /**
   * Set package name url map data listener.
