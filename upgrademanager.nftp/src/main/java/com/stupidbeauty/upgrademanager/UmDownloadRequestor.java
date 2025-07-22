@@ -84,7 +84,9 @@ import java.io.File;
 
 public class UmDownloadRequestor
 {
-  private Timer timerObj = null; //!< The timer of cancelling download when no progress for a long time.
+  private Handler timeoutHandler = new Handler(Looper.getMainLooper());
+  private Runnable timeoutRunnable;
+  // private Timer timerObj = null; //!< The timer of cancelling download when no progress for a long time.
   private String actionName; //!< Construct action name.
   private Notification continiusNotification=null; //!<记录的通知
   private DownloadRequestorInterface launcherActivity=null; //!< 启动活动。
@@ -361,52 +363,35 @@ public class UmDownloadRequestor
     /**
     * Cancel the cancel timer.
     */
-    private void cancelCancelTimer()
+    public void cancelCancelTimer() 
     {
-      if (timerObj!=null) // The timer exists
+      if (timeoutRunnable != null) 
       {
-        timerObj.cancel(); // Cancel the timer.
-        timerObj=null; // Delete it.
-      } // if (timerObj!=null) // The timer exists
-    } // private void cancelCancelTimer()
+        timeoutHandler.removeCallbacks(timeoutRunnable);
+        timeoutRunnable = null;
+      }
+    }
     
   /**
   * Start time out cancel timer.
   */
   private void startTimeoutCancelTimer() 
   {
-    //    chen xin.
-    cancelCancelTimer(); // Cancel the cancel timer.
+    cancelCancelTimer(); // 也可以取消之前的任务
 
-    timerObj = new Timer();
-    TimerTask timerTaskObj = new TimerTask() 
+    timeoutRunnable = new Runnable() 
     {
       public void run() 
       {
-        Handler uiHandler = new Handler(Looper.getMainLooper());
-
-        Runnable runnable= new Runnable()
-        {
-          /**
-          * 具体执行的代码
-          */
-          public void run()
-          {
-            Log.d(TAG, "startTimeoutCancelTimer, 390, cancelling"); // Debug.
-
-            cancelDownload(); // Cancel download.
-              
-            notifyDownloadFail(); // Notify download fail.
-          } //public void run()
-        };
-
-        uiHandler.post(runnable);
+        Log.d(TAG, "startTimeoutCancelTimer, 390, cancelling");
+        cancelDownload();
+        notifyDownloadFail();
       }
     };
 
-    timerObj.schedule(timerTaskObj, 60*1000); // 延时启动。
-  } // private void startTimeoutCancelTimer()
-  
+    timeoutHandler.postDelayed(timeoutRunnable, 60 * 1000); // 60 秒后执行
+  }
+
   /**
   * Un register install receiver.
   */
