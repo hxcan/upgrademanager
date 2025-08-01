@@ -25,12 +25,12 @@ public class TimeStampParser
       lastModifiedTimestamp = parsedDate.getTime();
       
       // 输出解析后的时间戳
-      System.out.println("Parsed Timestamp (milliseconds): " + lastModifiedTimestamp);
+      // System.out.println("Parsed Timestamp (milliseconds): " + lastModifiedTimestamp);
     }
     catch (ParseException e) 
     {
       // 如果时间戳无法解析，则处理异常
-      e.printStackTrace();
+      // e.printStackTrace();
     }
         
     return lastModifiedTimestamp;
